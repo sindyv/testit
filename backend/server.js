@@ -6,8 +6,11 @@ const express = require("express")
 const app = express()
 
 const indexRouter = require("./routes/index")
-// const authorRouter = require("./routes/authors")
-// const booksRouter = require("./routes/books")
+const projectRouter = require("./routes/projects")
+const usersRouter = require("./routes/userslinis")
+const testsRouter = require("./routes/tests")
+const companiesRouter = require("./routes/companies")
+const templatesRouter = require("./routes/templates")
 
 app.use((req, res, next) => {
 	res.setHeader("Access-Control-Allow-Origin", "*")
@@ -19,8 +22,11 @@ app.use((req, res, next) => {
 app.use(bodyParser.json())
 app.use(express.static("public"))
 app.use("/", indexRouter)
-// app.use("/authors", authorRouter)
-// app.use("/books", booksRouter)
+app.use("/projects", projectRouter)
+app.use("/users", usersRouter)
+app.use("/tests", testsRouter)
+app.use("/companies", companiesRouter)
+app.use("/templates", templatesRouter)
 
 const mongoose = require("mongoose")
 main().catch((err) => console.log(err))
