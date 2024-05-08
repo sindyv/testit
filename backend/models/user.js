@@ -26,7 +26,6 @@ const userSchema = new mongoose.Schema(
 		projects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Projects" }],
 		createdAt: {
 			type: Date,
-			required: true,
 			default: Date.now(),
 		},
 		updatedAt: {

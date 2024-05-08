@@ -7,7 +7,7 @@ const app = express()
 
 const indexRouter = require("./routes/index")
 const projectRouter = require("./routes/projects")
-const usersRouter = require("./routes/userslinis")
+const usersRouter = require("./routes/users")
 const testsRouter = require("./routes/tests")
 const companiesRouter = require("./routes/companies")
 const templatesRouter = require("./routes/templates")

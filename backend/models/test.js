@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const projectSchema = new mongoose.Schema(
+const testSchema = new mongoose.Schema(
 	{
 		name: {
 			type: String,
@@ -9,15 +9,34 @@ const projectSchema = new mongoose.Schema(
 		description: {
 			type: String,
 		},
-		company: {
+		project: {
 			type: mongoose.Schema.Types.ObjectId,
 			required: true,
-			ref: "Company",
+			ref: "Project",
 		},
-		users: [
+		inputFields: [
 			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: "User",
+				fieldType: {
+					type: String,
+					required: true,
+				},
+				fieldLabel: {
+					type: String,
+					required: true,
+				},
+				fieldPlaceholder: {
+					type: String,
+				},
+				fieldSelects: [
+					{
+						value: String,
+						text: String,
+					},
+				],
+				enabled: {
+					type: Boolean,
+					default: true,
+				},
 			},
 		],
 		createdBy: {
@@ -40,8 +59,10 @@ const projectSchema = new mongoose.Schema(
 		toObject: true,
 	}
 )
-projectSchema.pre("save", function (next) {
+
+testSchema.pre("save", function (next) {
 	this.updatedAt = Date.now()
 	next()
 })
-module.exports = mongoose.model("Project", projectSchema)
+
+module.exports = mongoose.model("Test", testSchema)

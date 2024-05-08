@@ -35,4 +35,8 @@ const companySchema = new mongoose.Schema(
 	}
 )
 
+companySchema.pre("save", function (next) {
+	this.updatedAt = Date.now()
+	next()
+})
 module.exports = mongoose.model("Company", companySchema)
