@@ -1,0 +1,16 @@
+// Override variables
+// $primary: orange;
+// $secondary: #900;
+
+// Add custom theme colors - Order of import is important!
+@import '../node_modules/bootstrap/scss/functions';
+@import '../node_modules/bootstrap/scss/variables';
+
+$custom-colors: (
+	'altlight-one': #900,
+);
+
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+@import 'bootstrap/scss/bootstrap';
+// Merge the maps
