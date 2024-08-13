@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 
 const projectSchema = new mongoose.Schema(
 	{
@@ -9,20 +9,45 @@ const projectSchema = new mongoose.Schema(
 		description: {
 			type: String,
 		},
+		streetName: {
+			type: String,
+		},
+		streetNumber: {
+			type: String,
+		},
+		postalCode: {
+			type: Number,
+		},
+		city: {
+			type: String,
+		},
 		company: {
 			type: mongoose.Schema.Types.ObjectId,
 			required: true,
-			ref: "Company",
+			ref: 'Company',
 		},
 		users: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "User",
+				ref: 'User',
 			},
 		],
+		webHotel: {
+			type: String,
+		},
+		owner: {
+			type: String,
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'User',
+			required: true,
+		},
+		endDate: {
+			type: Date,
+			required: true,
+		},
 		createdBy: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "User",
+			ref: 'User',
 		},
 		createdAt: {
 			type: Date,
@@ -40,8 +65,8 @@ const projectSchema = new mongoose.Schema(
 		toObject: true,
 	}
 )
-projectSchema.pre("save", function (next) {
+projectSchema.pre('save', function (next) {
 	this.updatedAt = Date.now()
 	next()
 })
-module.exports = mongoose.model("Project", projectSchema)
+module.exports = mongoose.model('Project', projectSchema)

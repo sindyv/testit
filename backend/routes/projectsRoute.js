@@ -7,12 +7,37 @@ router.get('/', getProjects)
 
 // Create a new project
 router.post('/new', async (req, res) => {
+	const {
+		name,
+		description,
+		streetName,
+		streetNumber,
+		postalCode,
+		city,
+		company,
+		users,
+		owner,
+		endDate,
+	} = req.body
+
+	const endDateFormatted = new Date(endDate)
+
+	console.log(endDateFormatted)
+
 	const project = new Project({
-		name: req.body.name,
-		description: req.body.description,
-		company: req.body.company,
-		users: [req.body.users],
+		name,
+		description,
+		streetName,
+		streetNumber,
+		postalCode,
+		city,
+		company,
+		owner,
+		endDate,
+		users: [users],
 	})
+
+	console.log(req.body)
 	try {
 		const newProject = await project.save()
 		res.status(201).json({
@@ -24,6 +49,8 @@ router.post('/new', async (req, res) => {
 			message: 'Could not create company',
 			error: error,
 		})
+
+		console.log(error)
 	}
 })
 

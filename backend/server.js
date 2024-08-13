@@ -12,6 +12,7 @@ const userRouter = require('./routes/userRoute')
 const testsRouter = require('./routes/tests')
 const companiesRouter = require('./routes/companies')
 const templatesRouter = require('./routes/templates')
+app.use(cors())
 
 app.use((req, res, next) => {
 	res.setHeader('Access-Control-Allow-Origin', '*')
@@ -19,7 +20,6 @@ app.use((req, res, next) => {
 	res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 	next()
 })
-app.use(cors())
 app.use(bodyParser.json())
 app.use(express.static('public'))
 app.use('/', indexRouter)

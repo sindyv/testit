@@ -24,6 +24,8 @@ function useLogin() {
 		if (!response.ok) {
 			setLoading(false)
 			setError(json.error)
+
+			return null
 		}
 
 		if (response.ok) {
@@ -33,6 +35,8 @@ function useLogin() {
 			// update the auth context
 			dispatchState({ type: 'LOGIN', payload: json })
 			setLoading(false)
+
+			return json
 		}
 	}
 	return { login, loading, error }
