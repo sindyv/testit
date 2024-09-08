@@ -1,8 +1,8 @@
 import React from 'react'
 
-import ProjectDashboardTableLine from './ProjectDashboardTableLine'
+import ProjectListTableLine from './ProjectListTableLine'
 
-function ProjectDashboard() {
+function ProjectList() {
 	return (
 		<div className='card shadow rounded-4 mt-5'>
 			<div className='card-body'>
@@ -19,8 +19,8 @@ function ProjectDashboard() {
 						</tr>
 					</thead>
 					<tbody>
-						<ProjectDashboardTableLine />
-						<ProjectDashboardTableLine />
+						<ProjectListTableLine />
+						<ProjectListTableLine />
 					</tbody>
 				</table>
 			</div>
@@ -28,4 +28,4 @@ function ProjectDashboard() {
 	)
 }
 
-export default ProjectDashboard
+export default ProjectList

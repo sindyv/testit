@@ -36,8 +36,9 @@ function NavProjectCollapsable() {
 					</li>
 					<li className='nav-item'>
 						<NavLink
+							end
 							className='nav-link text-dark'
-							to={`/project-new`}
+							to={`/projects/new`}
 						>
 							<div className='d-flex gap-2 align-items-center'>
 								<span className='ms-4'>Opprett nytt</span>

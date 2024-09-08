@@ -7,15 +7,26 @@ import NavigationLink from './NavigationLink'
 import { DashboardIcon } from '../../assets/icons/dashboard.jsx'
 
 import { MainLogo } from '../../assets/svg/MainLogo.jsx'
-import UserSvg from '../../assets/svg/UserSvg.jsx'
-import CompanySvg from '../../assets/svg/CompanySvg.jsx'
 import NavProjectCollapsable from './NavProjectCollapsable.jsx'
+import { useAuthContext } from '../../hooks/useAuthContext.js'
+import ThreeDotsDropdown from '../UI/ThreeDotsDropdown.jsx'
+import NavCompaniesCollapsable from './NavCompaniesCollapsable.jsx'
+import NavUsersCollapsable from './NavUsersCollapsable.jsx'
 
 function Navigation() {
 	const { logout } = useLogout()
 	const handleLogout = () => {
 		logout()
 	}
+
+	const userMenu = [
+		{
+			title: 'Logg ut',
+			function: handleLogout,
+		},
+	]
+
+	const { user } = useAuthContext()
 	return (
 		<div
 			className={`border-end rounded-end-4 border-2 min-vh-100 d-flex flex-align-center flex-column justify-content-between ${styles.sidebar} `}
@@ -27,45 +38,29 @@ function Navigation() {
 
 				<ul className='nav flex-column'>
 					<NavigationLink
-						url={'dashboard'}
+						url={''}
 						linkTitle={'Dashboard'}
 						svg={<DashboardIcon />}
 					/>
-					<NavProjectCollapsable />
-					<NavigationLink
-						url={'users'}
-						linkTitle={'Brukere'}
-						svg={<UserSvg />}
-					/>
-					<NavigationLink
-						url={'company'}
-						linkTitle={'Firma'}
-						svg={<CompanySvg />}
-					/>
+					{user.company ? (
+						<>
+							<NavProjectCollapsable />
+							<NavUsersCollapsable />
+
+							<NavCompaniesCollapsable />
+						</>
+					) : null}
 				</ul>
 			</div>
-			<button className='btn btn-primary' onClick={handleLogout}>
-				Logout
-			</button>
+			<div className='d-flex justify-content-around'>
+				<p
+				// onClick={handleLogout}
+				>
+					{user.name}
+				</p>
+				<ThreeDotsDropdown menuItems={userMenu} />
+			</div>
 		</div>
-		// <nav className="navbar">
-		// 	<ul>
-		// 		<li className="nav-item">
-		// 			<Link to={'/login'}>Login</Link>
-		// 		</li>
-		// 		<li>
-		// 			<Link to={'/signup'}>Sign up</Link>
-		// 		</li>
-		// 		<li>
-		// 			<Link to={'/tables'}>The tables</Link>
-		// 		</li>
-		// 		<li>
-		// 			<button className="btn btn-primary" onClick={handleLogout}>
-		// 				Logout
-		// 			</button>
-		// 		</li>
-		// 	</ul>
-		// </nav>
 	)
 }
 

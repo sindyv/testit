@@ -1,5 +1,6 @@
 // Override variables
-// $primary: orange;
+$primary: #ab570a;
+$light: #f4f4f4;
 // $secondary: #900;
 
 // Add custom theme colors - Order of import is important!
@@ -11,6 +12,10 @@ $custom-colors: (
 );
 
 $theme-colors: map-merge($theme-colors, $custom-colors);
+
+// Override Bootstrap's font-family variables
+$font-family-sans-serif: 'Inter', sans-serif;
+$font-family-base: $font-family-sans-serif;
 
 @import 'bootstrap/scss/bootstrap';
 // Merge the maps

@@ -6,7 +6,7 @@ export const useSignup = () => {
 	const [loading, setLoading] = useState(null)
 	const { dispatchState } = useAuthContext()
 
-	async function signup(email, password) {
+	async function signup(email, password, firstName, lastName, mobile) {
 		setLoading(true)
 		setError(null)
 
@@ -15,7 +15,13 @@ export const useSignup = () => {
 			{
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ email, password }),
+				body: JSON.stringify({
+					email,
+					password,
+					firstName,
+					lastName,
+					mobile,
+				}),
 			}
 		)
 
@@ -24,6 +30,8 @@ export const useSignup = () => {
 		if (!response.ok) {
 			setLoading(false)
 			setError(json.error)
+
+			return null
 		}
 
 		if (response.ok) {
@@ -33,6 +41,8 @@ export const useSignup = () => {
 			// update the auth context
 			dispatchState({ type: 'LOGIN', payload: json })
 			setLoading(false)
+
+			return json
 		}
 	}
 	return { signup, loading, error }

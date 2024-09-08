@@ -1,0 +1,11 @@
+.container {
+	width: 200px;
+	height: 200px;
+	border: 1px solid;
+}
+
+.child {
+	background-color: red;
+	height: 100%;
+	display: flex;
+}

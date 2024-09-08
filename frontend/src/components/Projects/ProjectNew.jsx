@@ -1,6 +1,5 @@
 import { Form, redirect, useLoaderData } from 'react-router-dom'
 import InputField from '../UI/InputField'
-import useFetch from '../../hooks/useFetch'
 
 const user = JSON.parse(localStorage.getItem('user'))
 

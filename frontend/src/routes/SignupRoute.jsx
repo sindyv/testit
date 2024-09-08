@@ -1,4 +1,4 @@
-import Signup from '../components/Signup'
+import Signup from '../components/Unprotected/Signup/Signup'
 
 function SignupRoute() {
 	return <Signup />

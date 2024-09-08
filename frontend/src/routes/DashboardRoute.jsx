@@ -1,7 +1,12 @@
 import React from 'react'
+import Dashboard from '../components/Dashboard/Dashboard'
 
 function DashboardRoute() {
-	return <div>DashboardRoute</div>
+	return (
+		<>
+			<Dashboard />
+		</>
+	)
 }
 
 export default DashboardRoute

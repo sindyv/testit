@@ -2,7 +2,12 @@ const express = require('express')
 const router = express.Router()
 const Company = require('../models/company')
 const requireAuth = require('../middleware/requireAuth')
+const {
+	getExternalCompanies,
+	addExternalCompany,
+} = require('../controllers/companyController')
 
+// all subsequent routes require authorization
 router.use(requireAuth)
 
 // Fetch all companies in database
@@ -10,6 +15,10 @@ router.get('/', async (req, res) => {
 	let companies = await Company.find().populate('users').exec()
 	res.status(200).json({ companies })
 })
+
+router.get('/external', getExternalCompanies)
+
+router.post('/external/new', addExternalCompany)
 
 // Create a new company
 router.post('/new', async (req, res) => {

@@ -2,14 +2,17 @@ import React from 'react'
 
 import ThreeDotsDropdown from '../UI/ThreeDotsDropdown'
 
-import styles from './ProjectDashboard.module.css'
+import styles from './ProjectList.module.css'
+import { Link } from 'react-router-dom'
 
-function ProjectDashboardTableLine() {
+function ProjectListTableLine() {
 	return (
 		<tr>
 			<td>
 				<div>
-					<div className='fw-medium'>Lærdal Gjenværende</div>
+					<div className='fw-medium'>
+						<Link to='123'>Lærdal Gjenværende</Link>
+					</div>
 					<div className={`${styles.subtitle}`}>
 						Tanke Svilands gate 34
 					</div>
@@ -43,4 +46,4 @@ function ProjectDashboardTableLine() {
 	)
 }
 
-export default ProjectDashboardTableLine
+export default ProjectListTableLine

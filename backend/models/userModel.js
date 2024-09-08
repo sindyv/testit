@@ -6,12 +6,12 @@ const userSchema = new mongoose.Schema(
 	{
 		firstName: {
 			type: String,
-			// required: true,
+			required: true,
 			required: false,
 		},
 		lastName: {
 			type: String,
-			// required: true,
+			required: true,
 			required: false,
 		},
 		email: {
@@ -22,9 +22,12 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		mobile: {
+			type: String,
+			required: false,
+		},
 		role: {
 			type: String,
-			// required: true,
 			required: false,
 		},
 		company: {
@@ -59,12 +62,11 @@ userSchema.statics.signup = async function (
 	firstName,
 	lastName,
 	password,
-	role,
-	company
+	mobile
 ) {
 	const exists = await this.findOne({ email })
 
-	if (!email || !password) {
+	if (!email || !password || !firstName || !lastName || !mobile) {
 		throw Error('Please fill inn all fields')
 	}
 
@@ -88,8 +90,7 @@ userSchema.statics.signup = async function (
 		password: hash,
 		firstName,
 		lastName,
-		role,
-		company,
+		mobile,
 	})
 
 	return user

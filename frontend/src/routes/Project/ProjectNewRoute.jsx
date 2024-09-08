@@ -1,6 +1,5 @@
 import React from 'react'
-import ProjectNew from '../components/Projects/ProjectNew'
-
+import ProjectNew from '../../components/Projects/ProjectNew'
 function ProjectNewRoute() {
 	return <ProjectNew />
 }

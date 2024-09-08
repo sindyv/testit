@@ -1,8 +1,8 @@
 import React from 'react'
 import AddNewUser from '../components/Users/AddNewUser'
 
-function UsersNewRoute() {
+function UsersAddRoute() {
 	return <AddNewUser />
 }
 
-export default UsersNewRoute
+export default UsersAddRoute
