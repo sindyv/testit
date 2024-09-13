@@ -1,31 +1,31 @@
+import { Link } from 'react-router-dom'
 import Card from '../../../UI/Card'
 import ThreeDotsDropdown from '../../../UI/ThreeDotsDropdown'
 
 function ProjectSystemList() {
 	return (
-		<Card title={'Systemtester'} className={'mt-3'}>
+		<Card title={'Systemoversikt'} className={'mt-3'}>
 			<table className='table'>
 				<thead>
 					<tr>
 						<th scope='col' className={``}>
-							System
+							Systemer
 						</th>
-						<th scope='col'>Sluttdato</th>
 						<th scope='col'>Deltakere</th>
 						<th scope='col'>Status</th>
-						<th scope='col'>Utført</th>
 						<th scope='col'>Avvik</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td>
-							<div>+C=360.001</div>
+							<div>
+								<Link to='123'>+C=360.001</Link>
+							</div>
 							<div className='fs-7 fw-normal'>
 								Ventilasjon 1.etg
 							</div>
 						</td>
-						<td className='py-3'>2024-09-29</td>
 						<td className='py-3 d-flex gap-2'>
 							<span className='badge text-bg-light fw-medium fs-6'>
 								Sindre
@@ -44,7 +44,6 @@ function ProjectSystemList() {
 								</span>
 							</span>
 						</td>
-						<td className='py-3'>3/16</td>
 						<td className='py-3'>
 							<div className='d-flex justify-content-between'>
 								<span className='mx-3'>1</span>

@@ -21,12 +21,13 @@ import SignupNewCompany from './components/Unprotected/Signup/SignupNewCompany.j
 import UserIsRegistered from './components/Unprotected/Signup/UserIsRegistered.jsx'
 import ProjectListRoute from './routes/Project/ProjectListRoute.jsx'
 import SelectedProjectRoute from './routes/Project/SelectedProjectRoute.jsx'
-import ProjectSystemList from './components/Projects/ProjectDashboard/ProjectSystemList/ProjectSystemList.jsx'
-import ProjectFunctionDescription from './components/Projects/ProjectDashboard/ProjectFunctionDescription/ProjectFunctionDescription.jsx'
-import ProjectIntegratedTestList from './components/Projects/ProjectDashboard/ProjectIntegratedTestList/ProjectIntegratedTestList.jsx'
-import ProjectSystemTestList from './components/Projects/ProjectDashboard/ProjectSystemTestList/ProjectSystemTestList.jsx'
-import ProjectUserList from './components/Projects/ProjectDashboard/ProjectUserList/ProjectUserList.jsx'
+import ProjectSystemList from './components/Projects/ProjectDashboard/SystemList/SystemList.jsx'
+import ProjectFunctionDescription from './components/Projects/ProjectDashboard/FunctionDescription/FunctionDescription.jsx'
+import ProjectIntegratedTestList from './components/Projects/ProjectDashboard/IntegratedTestList/IntegratedTestList.jsx'
+import ProjectSystemTestList from './components/Projects/ProjectDashboard/SystemTestList/SystemTestList.jsx'
+import ProjectUserList from './components/Projects/ProjectDashboard/UserList/ProjectUserList.jsx'
 import ProjectDashboard from './components/Projects/ProjectDashboard/ProjectDashboard.jsx'
+import System from './components/Projects/ProjectDashboard/System/System.jsx'
 
 function App() {
 	const { user } = useAuthContext()
@@ -163,15 +164,30 @@ function App() {
 								},
 								{
 									path: 'systems',
-									element: (
-										<ProtectedRoute>
-											<ProjectSystemList />
-										</ProtectedRoute>
-									),
-									errorElement: <p>An error has occured!</p>,
+									errorElement: <ErrorPage />,
 									handle: {
-										crumb: () => 'Funksjonsbeskrivelser',
+										crumb: () => 'Systemliste',
 									},
+									children: [
+										{
+											index: true,
+											element: (
+												<ProtectedRoute>
+													<ProjectSystemList />
+												</ProtectedRoute>
+											),
+											errorElement: <ErrorPage />,
+										},
+										{
+											path: ':systemId',
+											element: (
+												<ProtectedRoute>
+													<System />
+												</ProtectedRoute>
+											),
+											errorElement: <ErrorPage />,
+										},
+									],
 								},
 							],
 						},
