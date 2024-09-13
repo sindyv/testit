@@ -1,26 +1,27 @@
-import { useAuthContext } from './useAuthContext'
-import { useState } from 'react'
+import { useAuthContext } from "./useAuthContext"
+import { useState } from "react"
 
 export const useSignup = () => {
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(null)
 	const { dispatchState } = useAuthContext()
 
-	async function signup(email, password, firstName, lastName, mobile) {
+	async function signup(user, company) {
 		setLoading(true)
 		setError(null)
 
 		const response = await fetch(
-			import.meta.env.VITE_DATABASE_URL + '/users/signup',
+			import.meta.env.VITE_DATABASE_URL + "/users/signup",
 			{
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					email,
-					password,
-					firstName,
-					lastName,
-					mobile,
+					email: user.email,
+					password: user.password,
+					firstName: user.firstName,
+					lastName: user.lastName,
+					mobile: user.mobile,
+					company,
 				}),
 			}
 		)
@@ -36,10 +37,10 @@ export const useSignup = () => {
 
 		if (response.ok) {
 			// save the user to local storage
-			localStorage.setItem('user', JSON.stringify(json))
+			localStorage.setItem("user", JSON.stringify(json))
 
 			// update the auth context
-			dispatchState({ type: 'LOGIN', payload: json })
+			dispatchState({ type: "LOGIN", payload: json })
 			setLoading(false)
 
 			return json

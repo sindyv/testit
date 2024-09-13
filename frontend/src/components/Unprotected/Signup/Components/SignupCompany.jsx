@@ -1,23 +1,31 @@
-import InputFieldControlled from '../../../UI/InputFieldControlled'
-import { Link } from 'react-router-dom'
-function SignupCompany({ company, setCompany }) {
+import { useEffect, useState } from "react"
+import InputFieldControlled from "../../../UI/InputFieldControlled"
+function SignupCompany({ orgNu, setOrgNu, fetchedCompany }) {
 	return (
 		<>
-			<div className='d-flex'>
+			<div className="d-flex">
 				<InputFieldControlled
-					className={'mb-3 flex-fill m-2'}
-					type={'text'}
-					id={'company'}
-					label={'Bedrift'}
-					data={company}
-					setData={setCompany}
+					className={"mb-3 flex-fill m-2"}
+					type={"number"}
+					id={"orgNu"}
+					label={"Bedrift (Org. nr)"}
+					data={orgNu.orgNu}
+					setData={setOrgNu}
 				/>
 			</div>
-			<div>
-				<p className='fw-light'>
-					Finner du ikke din bedrift? Opprett den{' '}
-					<Link to={'company/new'}>her</Link>
-				</p>
+			<div className="mb-3 flex-fill m-2">
+				<label htmlFor={fetchedCompany} className="form-label">
+					Bedriftsnavn
+				</label>
+				<input
+					value={fetchedCompany?.navn ?? ""}
+					type="text"
+					className="form-control"
+					id={"fetchedCompany"}
+					name={"fetchedCompany"}
+					onChange={(e) => {}}
+					disabled
+				/>
 			</div>
 		</>
 	)

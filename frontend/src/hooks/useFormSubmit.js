@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react'
-import { useAuthContext } from './useAuthContext'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from "react"
+import { useAuthContext } from "./useAuthContext"
+import { useNavigate } from "react-router-dom"
 
 export default function useFormSubmit(defaultObject) {
 	const navigate = useNavigate()
 	const [formData, setFormData] = useState(defaultObject)
 	const [loading, setLoading] = useState(false)
-	const [error, setError] = useState('')
+	const [error, setError] = useState("")
 
 	const { user } = useAuthContext()
 
@@ -30,16 +30,16 @@ export default function useFormSubmit(defaultObject) {
 			const result = await fetch(
 				`${import.meta.env.VITE_DATABASE_URL}/companies/external/new`,
 				{
-					method: 'POST',
+					method: "POST",
 					headers: {
-						'Content-Type': 'application/json',
-						Authorization: 'Bearer ' + user.token,
+						"Content-Type": "application/json",
+						Authorization: "Bearer " + user?.token,
 					},
 					body: JSON.stringify({ ...formData, user }),
 				}
 			)
 
-			navigate('/company/external')
+			navigate("/company/external")
 		} catch (error) {
 			setError(error.message)
 		} finally {

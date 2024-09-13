@@ -1,18 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState } from "react"
 
-function InputFieldControlled({ className, type, id, label, data, setData }) {
+function InputFieldControlled({
+	className,
+	type,
+	id,
+	label,
+	data = "",
+	setData,
+}) {
 	return (
 		<div className={className}>
-			<label htmlFor={id} className='form-label'>
+			<label htmlFor={id} className="form-label">
 				{label}
 			</label>
 			<input
 				value={data}
 				type={type}
-				className='form-control'
+				className="form-control"
 				id={id}
 				name={id}
-				onChange={setData}
+				onChange={(e) => setData((prev) => ({ ...prev, [id]: e.target.value }))}
 			/>
 		</div>
 	)

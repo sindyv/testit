@@ -1,7 +1,11 @@
-import Signup from '../components/Unprotected/Signup/Signup'
+import { Outlet } from "react-router-dom"
 
 function SignupRoute() {
-	return <Signup />
+	return (
+		<>
+			<Outlet />
+		</>
+	)
 }
 
 export default SignupRoute
