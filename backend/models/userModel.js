@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
 		},
 		company: {
 			type: mongoose.Schema.Types.ObjectId,
-			// required: true,
+			required: true,
 			ref: 'Company',
 		},
 		projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Projects' }],
@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema(
 		enabled: {
 			type: Boolean,
 			required: true,
-			default: true,
+			default: false,
 		},
 	},
 	{
@@ -62,28 +62,39 @@ userSchema.statics.signup = async function (
 	firstName,
 	lastName,
 	password,
-	mobile
+	mobile,
+	company,
+	enabled
 ) {
 	const exists = await this.findOne({ email })
 
 	if (!email || !password || !firstName || !lastName || !mobile) {
-		throw Error('Please fill inn all fields')
+		throw Error('Vennligst fyll inn alle feltene')
 	}
 
 	if (!validator.isEmail(email)) {
-		throw Error('Please use a valid email')
+		throw Error('E-postadressen er i feil format')
 	}
 
 	if (!validator.isStrongPassword(password)) {
-		throw Error('Please use a more secure password')
+		throw Error(
+			'Bruk et sikrere passord. Dette må innehold minst en stor bokstav, et tegn og tall, samt være minst 8 karakterer'
+		)
 	}
 
 	if (exists) {
-		throw Error('User already exists')
+		throw Error(
+			'E-postadressen du prøver å registrere er allerede registrert'
+		)
 	}
 
 	const salt = await bcrypt.genSalt(10)
 	const hash = await bcrypt.hash(password, salt)
+	let role = 'disabled'
+
+	if (enabled) {
+		role = 'Administrator'
+	}
 
 	const user = await this.create({
 		email,
@@ -91,6 +102,9 @@ userSchema.statics.signup = async function (
 		firstName,
 		lastName,
 		mobile,
+		company,
+		enabled,
+		role,
 	})
 
 	return user
@@ -98,19 +112,19 @@ userSchema.statics.signup = async function (
 
 userSchema.statics.login = async function (email, password) {
 	if (!email || !password) {
-		throw Error('Please fill inn all fields')
+		throw Error('Vennligst fyll inn alle feltene')
 	}
 
 	const user = await this.findOne({ email })
 
 	if (!user) {
-		throw Error('Wrong credentials')
+		throw Error('Feil brukernavn eller passord')
 	}
 
 	const match = await bcrypt.compare(password, user.password)
 
 	if (!match) {
-		throw Error('Wrong credentials (Password)')
+		throw Error('Feil brukernavn eller passord')
 	}
 
 	return user

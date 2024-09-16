@@ -1,29 +1,82 @@
 const User = require('../models/userModel')
+const Company = require('../models/companyModel')
 const jwt = require('jsonwebtoken')
 
-function createToken(_id) {
-	return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: '3d' })
+function createToken(user) {
+	return jwt.sign(
+		{
+			_id: user._id,
+			enabled: user.enabled,
+			role: user?.role ?? 'not found',
+		},
+		process.env.JWT_SECRET,
+		{
+			expiresIn: '3d',
+		}
+	)
 }
 
 const signupUser = async (req, res) => {
-	const { email, firstName, lastName, password, mobile } = req.body
-	console.log(req.body)
+	const {
+		email,
+		firstName,
+		lastName,
+		password,
+		mobile,
+		company: fetchedCompany,
+		readOnly,
+	} = req.body
+
 	try {
+		// check if compant exists.
+		let company = await Company.findOne({
+			organisationNumber: fetchedCompany.organisasjonsnummer,
+		})
+
+		// If it does not exist, create it.
+		const companyDoesNotExist = !company
+		if (!company) {
+			const companyDetails = {
+				companyName: fetchedCompany?.navn,
+				organisationNumber: fetchedCompany?.organisasjonsnummer,
+				email: email,
+				address: fetchedCompany?.forretningsadresse?.adresse[0],
+				city: fetchedCompany?.forretningsadresse?.poststed,
+				postnu: fetchedCompany?.forretningsadresse?.postnummer,
+				readOnly: readOnly,
+			}
+			company = await Company.createCompany(companyDetails)
+		}
+
+		// When company is created, create user
 		const user = await User.signup(
 			email,
 			firstName,
 			lastName,
 			password,
-			mobile
+			mobile,
+			company._id,
+			companyDoesNotExist
 		)
 
-		const token = createToken(user._id)
+		// When user is created, add user to company
+		company.users.push(user._id)
+		// If the company does not exist, define the createdBy as this user.
+		if (companyDoesNotExist) {
+			company.createdBy = user._id
+		}
+		// Update database with user information
+		company = await Company.findOneAndReplace({ _id: company._id }, company)
+		const token = createToken(user)
 
 		res.status(200).json({
-			id: user._id,
-			email,
-			company: user.company,
-			token,
+			user: {
+				id: user._id,
+				name: user.firstName + ' ' + user.lastName,
+				email,
+				company: user?.company ?? null,
+				token,
+			},
 		})
 	} catch (error) {
 		res.status(400).json({ error: error.message })
@@ -36,57 +89,33 @@ const loginUser = async (req, res) => {
 	try {
 		const user = await User.login(email, password)
 
-		const token = createToken(user._id)
+		const token = createToken(user)
 
 		res.status(200).json({
-			id: user._id,
-			name: user.firstName + ' ' + user.lastName,
-			email,
-			company: user?.company ?? null,
-			token,
+			user: {
+				id: user._id,
+				name: user.firstName + ' ' + user.lastName,
+				email,
+				company: user?.company ?? null,
+				token,
+			},
+			enabled: user.enabled,
 		})
 	} catch (error) {
 		res.status(400).json({ error: error.message })
 	}
 }
 
-const assignUser = async (req, res) => {
-	const { email, role, company } = req.body
-
-	if (!email || !role || !company) {
-		return res.status(400).json({ message: 'Fyll ut alle feltene' })
-	}
-
+const fetchUsersFromCompany = async (req, res) => {
+	const { companyId } = req.params
 	try {
-		// find a user with the email
-		const user = await User.findOne({ email })
-
-		if (!user) {
-			throw Error('User not found')
+		const users = await User.find({ company: companyId })
+		if (!users) {
+			throw Error('Kunne ikke finne noen brukere i dette firmaet')
 		}
-
-		// Find the user by ID and update the fields
-		const updatedUser = await User.findByIdAndUpdate(
-			user._id,
-			{
-				company,
-				role,
-			},
-			{ new: true } // Return the updated user object
-		)
-
-		res.status(200).json({
-			message: 'User updated successfully',
-			user: updatedUser,
-		})
-	} catch (err) {
-		res.status(500).json({
-			message: 'Error updating user',
-			error: err.message,
-		})
-
-		console.log(err)
+		res.status(200).json({ users })
+	} catch (error) {
+		res.status(400).json({ error: error.message || 'Noe gikk galt' })
 	}
 }
-
-module.exports = { signupUser, loginUser, assignUser }
+module.exports = { signupUser, loginUser, fetchUsersFromCompany }

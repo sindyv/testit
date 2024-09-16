@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useAuthContext } from './useAuthContext'
+import { jwtDecode } from 'jwt-decode'
 
 function useLogin() {
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(null)
-	const { dispatchState } = useAuthContext()
+	const { dispatchState, user } = useAuthContext()
 
 	async function login(email, password) {
 		setLoading(true)
@@ -19,8 +20,6 @@ function useLogin() {
 			}
 		)
 
-		const json = await response.json()
-
 		if (!response.ok) {
 			setLoading(false)
 			setError(json.error)
@@ -28,15 +27,17 @@ function useLogin() {
 			return null
 		}
 
+		const json = await response.json()
+
 		if (response.ok) {
-			// save the user to local storage
-			localStorage.setItem('user', JSON.stringify(json))
-
+			// decode the token to add the "enabled"-feature to the user object
+			const decodedToken = jwtDecode(json.user.token)
+			json.user.enabled = decodedToken.enabled
 			// update the auth context
-			dispatchState({ type: 'LOGIN', payload: json })
+			dispatchState({ type: 'LOGIN', payload: json.user })
 			setLoading(false)
-
-			return json
+			console.log(json.user)
+			return json.user
 		}
 	}
 	return { login, loading, error }

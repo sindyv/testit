@@ -11,12 +11,14 @@ const Login = () => {
 	const navigate = useNavigate()
 	const { user } = useAuthContext()
 
+	// If there is a user, navigate to root route
 	useEffect(() => {
 		if (user) {
 			navigate('/')
 		}
 	}, [])
 
+	// Check login credentials. If login is succesfull, navigate to root route. If not, error will be shown
 	const handleSubmit = async (e) => {
 		e.preventDefault()
 

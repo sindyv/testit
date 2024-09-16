@@ -1,15 +1,34 @@
-import { useState } from 'react'
 import styles from './Company.module.css'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
-import InputField from '../UI/InputField'
-import { Link } from 'react-router-dom'
+import API from '../../resources/companyAPI'
+import { useAuthContext } from '../../hooks/useAuthContext'
+import ErrorToast from '../UI/ErrorToast'
+import SuccessToast from '../UI/SuccessToast'
+import CompanyInputs from './Components/CompanyInputs'
 
 function Company() {
-	const [externalCompanyChecked, setExternalCompanyChecked] = useState(false)
+	const { user } = useAuthContext()
 
-	const handleCheckExternalCompany = (e) => {
-		setExternalCompanyChecked(e.target.checked)
-	}
+	// Access the client
+	const queryClient = useQueryClient()
+
+	// Queries
+	const { isPending, isError, data, error } = useQuery({
+		queryKey: ['company', { companyId: user.company }],
+		queryFn: API.fetchCompany,
+	})
+
+	// Mutations
+	const mutation = useMutation({
+		mutationFn: async (company) => API.updateCompany(company),
+		onSuccess: () => {
+			// Invalidate and refetch
+			queryClient.invalidateQueries({ queryKey: ['company'] })
+		},
+	})
+
+	const company = data?.company ?? {}
 
 	return (
 		<>
@@ -17,73 +36,113 @@ function Company() {
 				className={`card mt-5 rounded-4 shadow ${styles['max-width-500']}`}
 			>
 				<div className='card-body'>
-					<h3>Firmanavn</h3>
-					<div>
-						<div className='d-flex'>
-							<InputField
-								className={'mb-3 flex-fill m-2'}
-								type={'email'}
-								id={'email'}
-								label={'E-post'}
-							/>
-							<InputField
-								className={'mb-3 flex-fill m-2'}
-								type={'text'}
-								id={'telephone'}
-								label={'Telefonnummer'}
-							/>
-						</div>
-						<div className='d-flex'>
-							<InputField
-								className={'mb-3 flex-fill m-2'}
-								type={'text'}
-								id={'address'}
-								label={'Adresse'}
-							/>
-							<InputField
-								className={'mb-3 flex-fill m-2'}
-								type={'text'}
-								id={'street'}
-								label={'Gatenavn'}
-							/>
-						</div>
-						<div className='d-flex'>
-							<InputField
-								className={'mb-3 flex-fill m-2'}
-								type={'text'}
-								id={'streetnu'}
-								label={'Gatenummer'}
-							/>
-							<InputField
-								className={'mb-3 flex-fill m-2'}
-								type={'text'}
-								id={'postal'}
-								label={'Postnummer'}
-							/>
-							<InputField
-								className={'mb-3 flex-fill m-2'}
-								type={'text'}
-								id={'city'}
-								label={'By'}
-							/>
-						</div>
-					</div>
-					<div>
-						<button
-							className='m-2 btn btn-primary'
-							data-bs-toggle='collapse'
-							data-bs-target='#add-existing-user'
-							type='button'
-							aria-expanded='false'
-							aria-controls='add-existing-user'
-						>
-							Legg til eksisterende bruker
-						</button>
-					</div>
+					{isError && <ErrorToast>{error.message}</ErrorToast>}
+					{mutation.isError && (
+						<ErrorToast>{mutation.error.message}</ErrorToast>
+					)}
+					{mutation.isSuccess && (
+						<SuccessToast>Data oppdatert</SuccessToast>
+					)}
+					{isPending ? (
+						<p>Loading ...</p>
+					) : (
+						<CompanyInputs company={company} mutation={mutation} />
+					)}
 				</div>
 			</div>
 		</>
 	)
+
+	// return (
+	// 	<>
+	// 		<div
+	// 			className={`card mt-5 rounded-4 shadow ${styles['max-width-500']}`}
+	// 		>
+	// 			<div className='card-body'>
+	// 				<h3>{companyName}</h3>
+	// 				{isError && <ErrorToast>{error.message}</ErrorToast>}
+	// 				{mutation.isError && (
+	// 					<ErrorToast>{mutation.error.message}</ErrorToast>
+	// 				)}
+	// 				{mutation.isSuccess && (
+	// 					<SuccessToast>Data oppdatert</SuccessToast>
+	// 				)}
+	// 				{isPending ? (
+	// 					<p>Laster ...</p>
+	// 				) : (
+	// 					<div>
+	// 						<div className='d-flex'>
+	// 							<InputFieldControlled
+	// 								className={'mb-3 flex-fill m-2'}
+	// 								type={'email'}
+	// 								id={'email'}
+	// 								label={'E-post'}
+	// 								data={company.email}
+	// 								setData={setCompany}
+	// 							/>
+	// 							<InputFieldControlled
+	// 								className={'mb-3 flex-fill m-2'}
+	// 								type={'text'}
+	// 								id={'organisationNumber'}
+	// 								label={'Organisasjonsnummer'}
+	// 								data={company.organisationNumber}
+	// 								setData={setCompany}
+	// 								disabled={true}
+	// 							/>
+	// 						</div>
+	// 						<div className='d-flex'>
+	// 							<InputFieldControlled
+	// 								className={'mb-3 flex-fill m-2'}
+	// 								type={'text'}
+	// 								id={'address'}
+	// 								label={'Adresse'}
+	// 								data={company.address}
+	// 								setData={setCompany}
+	// 							/>
+	// 						</div>
+	// 						<div className='d-flex'>
+	// 							<InputFieldControlled
+	// 								className={'mb-3 flex-fill m-2'}
+	// 								type={'text'}
+	// 								id={'postnu'}
+	// 								label={'Postnummer'}
+	// 								data={company.postnu}
+	// 								setData={setCompany}
+	// 							/>
+	// 							<InputFieldControlled
+	// 								className={'mb-3 flex-fill m-2'}
+	// 								type={'text'}
+	// 								id={'city'}
+	// 								label={'By'}
+	// 								data={company.city}
+	// 								setData={setCompany}
+	// 							/>
+	// 						</div>
+	// 						<div className='m-2'>
+	// 							<button
+	// 								className='btn btn-primary'
+	// 								onClick={handleSubmit}
+	// 							>
+	// 								{mutation.isPending ? (
+	// 									<div
+	// 										className='spinner-border spinner-border-sm'
+	// 										role='status'
+	// 									>
+	// 										<span className='visually-hidden'>
+	// 											Laster...
+	// 										</span>
+	// 									</div>
+	// 								) : (
+	// 									'Lagre'
+	// 								)}
+	// 							</button>
+	// 						</div>
+	// 					</div>
+	// 				)}
+	// 			</div>
+	// 		</div>
+	// 	</>
+	// )
 }
 
 export default Company

@@ -1,45 +1,36 @@
-const ExternalCompany = require('../models/externalCompanyModel')
-const User = require('../models/userModel')
+const Company = require('../models/companyModel')
 
-const getExternalCompanies = async (req, res) => {
-	let externalCompanies = await ExternalCompany.find({})
-
-	res.status(200).json({ externalCompanies })
-}
-
-const addExternalCompany = async (req, res) => {
-	const {
-		companyName,
-		orgNu,
-		email,
-		streetnu,
-		streetname,
-		website,
-		city,
-		postnu,
-		user,
-	} = req.body
-
-	console.log(req.body)
+const fetchCompany = async (req, res) => {
+	const { id } = req.params
 
 	try {
-		const externalCompany = await ExternalCompany.addExternalCompany(
-			companyName,
-			orgNu,
-			email,
-			streetnu,
-			streetname,
-			website,
-			city,
-			postnu,
-			user
-		)
-		res.status(200).json({ externalCompany })
-	} catch (error) {
-		res.status(400).json({ error: error.message })
+		const company = await Company.findById(id)
+			.populate('users')
+			.populate('createdBy')
+			.exec()
 
-		console.log(error)
+		res.status(200).json({ company })
+	} catch (error) {
+		res.status(400).json({
+			message: 'Vi fant ikke bedriften du leter etter :(',
+		})
 	}
 }
 
-module.exports = { getExternalCompanies, addExternalCompany }
+const updateCompany = async (req, res) => {
+	const { id } = req.params
+	const { company } = req.body
+	try {
+		const updatedCompany = await Company.findOneAndReplace(
+			{ _id: id },
+			{ ...company }
+		)
+		res.status(201).json({ updatedCompany })
+	} catch (error) {
+		res.status(400).json({
+			message: error.message || 'Vi klarte ikke å oppdatere bedriften',
+		})
+	}
+}
+
+module.exports = { fetchCompany, updateCompany }

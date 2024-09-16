@@ -42,12 +42,15 @@ function Navigation() {
 						linkTitle={'Dashboard'}
 						svg={<DashboardIcon />}
 					/>
-					{user.company ? (
+					{user.enabled ? (
 						<>
 							<NavProjectCollapsable />
-							<NavUsersCollapsable />
-
-							<NavCompaniesCollapsable />
+							{user.role === 'Administrator' && (
+								<>
+									<NavUsersCollapsable />
+									<NavCompaniesCollapsable />
+								</>
+							)}
 						</>
 					) : null}
 				</ul>

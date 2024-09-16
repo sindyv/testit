@@ -6,6 +6,12 @@ export const AuthContext = createContext()
 export const authReducer = (state, action) => {
 	switch (action.type) {
 		case 'LOGIN':
+			// Store the user object in localstorage so that the user does not have to login each time.
+			// Remove the 'enabled'-property, so that the user does not have access to this.
+			const storageObject = { ...action.payload }
+			delete storageObject.role
+			delete storageObject.enabled
+			localStorage.setItem('user', JSON.stringify(storageObject))
 			return { user: action.payload }
 		case 'LOGOUT':
 			return { user: null }
@@ -16,7 +22,7 @@ export const authReducer = (state, action) => {
 
 export const AuthContextProvider = ({ children }) => {
 	const [state, dispatchState] = useReducer(authReducer, {
-		user: JSON.parse(localStorage.getItem('user')),
+		user: {},
 	})
 
 	useEffect(() => {
@@ -27,8 +33,10 @@ export const AuthContextProvider = ({ children }) => {
 			const currentTime = Date.now() / 1000
 
 			if (decodedToken.exp > currentTime) {
+				user.enabled = decodedToken.enabled
+				user.role = decodedToken.role
+
 				dispatchState({ type: 'LOGIN', payload: user })
-				console.log(decodedToken.exp)
 			} else {
 				dispatchState({ type: 'LOGOUT', payload: user })
 			}

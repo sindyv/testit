@@ -5,16 +5,16 @@ const requireAuth = require('../middleware/requireAuth')
 const {
 	signupUser,
 	loginUser,
-	assignUser,
+	fetchUsersFromCompany,
 } = require('../controllers/userController')
 
 router.post('/signup', signupUser)
 
 router.post('/login', loginUser)
 
-router.post('/assignUSer', assignUser)
-
 router.use(requireAuth)
+
+router.get('/:companyId', fetchUsersFromCompany)
 
 router.get('/', async (req, res) => {
 	let users = await User.find().populate('company').exec()

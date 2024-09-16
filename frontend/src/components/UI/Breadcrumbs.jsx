@@ -48,7 +48,7 @@ function Breadcrumbs() {
 				</nav>
 			</div>
 
-			{user.company && (
+			{user.enabled && (
 				<div>
 					<div className='dropdown'>
 						<button

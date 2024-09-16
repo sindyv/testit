@@ -1,26 +1,28 @@
-import { useEffect, useState } from "react"
-import { useSignup } from "../../../hooks/useSignup"
-import styles from "./Signup.module.css"
-import { Form, useNavigate } from "react-router-dom"
-import { MainLogo } from "../../../assets/svg/MainLogo"
-import SignupCompany from "./Components/SignupCompany"
-import SignupInputfields from "./Components/SignupInputfields"
-import SignupButtons from "./Components/SignupButtons"
+import { useEffect, useState } from 'react'
+import { useSignup } from '../../../hooks/useSignup'
+import styles from './Signup.module.css'
+import { Form, useNavigate } from 'react-router-dom'
+import { MainLogo } from '../../../assets/svg/MainLogo'
+import SignupCompany from './Components/SignupCompany'
+import SignupInputfields from './Components/SignupInputfields'
+import SignupButtons from './Components/SignupButtons'
+import SignupReadOnlyCheckbox from './Components/SignupReadOnlyCheckbox'
 
 const Signup = () => {
 	// States
 	const [user, setUser] = useState({
-		email: "",
-		password: "",
-		repeatPassword: "",
-		firstName: "",
-		lastName: "",
-		mobile: "",
-		passError: "",
+		email: '',
+		password: '',
+		repeatPassword: '',
+		firstName: '',
+		lastName: '',
+		mobile: '',
+		passError: '',
+		readOnly: false,
 	})
 	const [error, setError] = useState(undefined)
-	const [orgNu, setOrgNu] = useState({ orgNu: "" })
-	const [fetchedCompany, setFetchedCompany] = useState("")
+	const [orgNu, setOrgNu] = useState({ orgNu: '' })
+	const [fetchedCompany, setFetchedCompany] = useState('')
 
 	// Hooks
 	const { signup, loading, error: signupError } = useSignup()
@@ -36,7 +38,7 @@ const Signup = () => {
 				)
 
 				if (!response.ok) {
-					throw Error("Failed to fetch data")
+					throw Error('Failed to fetch data')
 				}
 
 				const data = await response.json()
@@ -55,7 +57,7 @@ const Signup = () => {
 		const timer = setTimeout(() => {
 			if (user.password && user.repeatPassword) {
 				if (user.password !== user.repeatPassword) {
-					setError("Passordene må være like")
+					setError('Passordene må være like')
 				} else {
 					setError(undefined)
 				}
@@ -72,20 +74,26 @@ const Signup = () => {
 	// Submit form that registers users
 	const handleSubmit = async (e) => {
 		e.preventDefault()
-		console.log(user)
-		const signedUpUser = await signup(user, fetchedCompany)
+		if (!fetchedCompany) {
+			setError('Vi fant ingenting med dette organisasjonsnummeret')
+		} else {
+			const signedUpUser = await signup(user, fetchedCompany)
+			if (signedUpUser) {
+				navigate('/')
+			}
 
-		if (user) {
-			navigate("/")
+			console.log(fetchedCompany)
 		}
 	}
 
 	return (
-		<div className="container-fluid d-flex justify-content-center">
-			<div className={`card mt-5 rounded-4 shadow ${styles["max-width-500"]}`}>
-				<Form className="card-body">
-					<div className="d-flex justify-content-between">
-						<h4 className="fw-normal">Opprett ny bruker</h4>
+		<div className='container-fluid d-flex justify-content-center'>
+			<div
+				className={`card mt-5 rounded-4 shadow ${styles['max-width-500']}`}
+			>
+				<Form className='card-body'>
+					<div className='d-flex justify-content-between'>
+						<h4 className='fw-normal'>Opprett ny bruker</h4>
 						<MainLogo height={64} />
 					</div>
 					<div>
@@ -95,12 +103,23 @@ const Signup = () => {
 							setOrgNu={setOrgNu}
 							fetchedCompany={fetchedCompany}
 						/>
-						{error && <div className="alert alert-danger mt-3">{error}</div>}
+						<SignupReadOnlyCheckbox user={user} setUser={setUser} />
+
+						{error && (
+							<div className='alert alert-danger mt-3 mw-450'>
+								{error}
+							</div>
+						)}
 						{signupError && (
-							<div className="alert alert-danger mt-3">{signupError}</div>
+							<div className='alert alert-danger mt-3 mw-450'>
+								{signupError}
+							</div>
 						)}
 					</div>
-					<SignupButtons handleSubmit={handleSubmit} />
+					<SignupButtons
+						handleSubmit={handleSubmit}
+						loading={loading}
+					/>
 				</Form>
 			</div>
 		</div>

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+import { useAuthContext } from './useAuthContext'
 
-const useFetch = (endpoint, token) => {
+const useFetch = (endpoint) => {
+	const { user } = useAuthContext()
 	const [isLoading, setIsLoading] = useState(true)
 	const [error, setError] = useState('')
 	const [data, setData] = useState(null)
@@ -14,7 +16,7 @@ const useFetch = (endpoint, token) => {
 				`${import.meta.env.VITE_DATABASE_URL}/${endpoint}`,
 				{
 					headers: {
-						Authorization: 'Bearer ' + token,
+						Authorization: 'Bearer ' + user.token,
 					},
 				}
 			)
@@ -31,12 +33,12 @@ const useFetch = (endpoint, token) => {
 
 			setIsLoading(false)
 		}
-		if (token) {
+		if (user.token) {
 			fetchData()
 		}
 	}, [endpoint])
 
-	return { data, isLoading, error }
+	return { data, setData, isLoading, error }
 }
 
 export default useFetch
