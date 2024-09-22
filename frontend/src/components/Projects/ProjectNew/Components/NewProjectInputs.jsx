@@ -1,17 +1,23 @@
-import { useEffect } from 'react'
-import InputFieldControlled from '../../UI/InputFieldControlled'
 import { useForm } from 'react-hook-form'
+import useGetUser from '../../../../hooks/useGetUser'
 
-function NewProjectInputs({ data, selectedUser, setSelectedUser }) {
+function NewProjectInputs({ data, mutation }) {
 	const { register, handleSubmit } = useForm({
 		defaultValues: { projectName: 'Ditt prosjekt' },
 	})
+	const user = useGetUser()
+	const onSubmit = (data) => {
+		mutation.mutate({
+			projectObject: {
+				...data,
+				users: [data.owner],
+				company: user.company,
+				createdBy: user.id,
+			},
+		})
+	}
 	return (
-		<form
-			onSubmit={handleSubmit((data) => {
-				console.log(data)
-			})}
-		>
+		<form onSubmit={handleSubmit(onSubmit)}>
 			<div className='d-flex'>
 				<div className={'mb-3 flex-fill m-2'}>
 					<label htmlFor={'projectName'} className='form-label'>
@@ -36,27 +42,16 @@ function NewProjectInputs({ data, selectedUser, setSelectedUser }) {
 				</div>
 			</div>
 			<div className='d-flex'>
-				<div className={'mb-3 flex-fill m-2'}>
-					<label htmlFor={'streetName'} className='form-label'>
-						Gatenavn
+				<div className={'mb-3 flex-fill m-2 minw-300'}>
+					<label htmlFor={'address'} className='form-label'>
+						Adresse
 					</label>
-					<input
-						{...register('streetName')}
-						className='form-control'
-					/>
+					<input {...register('address')} className='form-control' />
 				</div>
-				<div className={'mb-3 flex-fill m-2'}>
-					<label htmlFor={'streetNumber'} className='form-label'>
-						Gatenummer
-					</label>
-					<input
-						{...register('streetNumber')}
-						className='form-control'
-					/>
-				</div>
-				<div className={'mb-3 flex-fill m-2'}>
+
+				<div className={'mb-3 flex-fill m-2 mw-75   '}>
 					<label htmlFor={'postnu'} className='form-label'>
-						Postnummer
+						Postnr.
 					</label>
 					<input {...register('postnu')} className='form-control' />
 				</div>

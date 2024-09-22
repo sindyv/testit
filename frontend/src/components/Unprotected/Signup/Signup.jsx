@@ -81,8 +81,6 @@ const Signup = () => {
 			if (signedUpUser) {
 				navigate('/')
 			}
-
-			console.log(fetchedCompany)
 		}
 	}
 

@@ -1,13 +1,38 @@
 const API_URL = import.meta.env.VITE_DATABASE_URL
 const user = JSON.parse(localStorage.getItem('user'))
+import axios from 'axios'
+
 const OPTIONS = {
 	headers: {
-		Authorization: 'Bearer ' + user.token,
+		Authorization: 'Bearer ' + user?.token,
 		'Content-Type': 'application/json',
 	},
 }
 export default {
-	fetchUserFromCompany: async ({ queryKey }) => {
+	// Update a single company based on a ID
+	createProject: async ({ projectObject }) => {
+		if (!projectObject) {
+			throw Error('Bedrift-objekt ikke tilgjengelig')
+		}
+		try {
+			const endpoint = `${API_URL}/projects`
+			const response = await fetch(endpoint, {
+				method: 'POST',
+				...OPTIONS,
+				body: JSON.stringify({ projectObject }),
+			})
+
+			const json = await response.json()
+			if (!response.ok)
+				throw Error(json?.message ?? 'Feil ved oppretting av data')
+
+			return json
+		} catch (error) {
+			// forward the error to Tanstack Query
+			throw error
+		}
+	},
+	fetchProjects: async ({ queryKey }) => {
 		const [_key, { query }] = queryKey
 		let queryString = '?'
 		Object.entries(query).forEach(([key, value]) => {
@@ -15,7 +40,7 @@ export default {
 		})
 
 		try {
-			const endpoint = `${API_URL}/users${queryString}`
+			const endpoint = `${API_URL}/projects${queryString}`
 			const response = await fetch(endpoint, OPTIONS)
 			const json = await response.json()
 			if (!response.ok)
@@ -27,13 +52,13 @@ export default {
 			throw error
 		}
 	},
-	updateUser: async (user) => {
+	updateProject: async (project) => {
 		try {
-			const endpoint = `${API_URL}/users/${user._id}`
+			const endpoint = `${API_URL}/projects/${project._id}`
 			const response = await fetch(endpoint, {
 				...OPTIONS,
 				method: 'PUT',
-				body: JSON.stringify({ user }),
+				body: JSON.stringify({ project }),
 			})
 			const json = await response.json()
 			if (!response.ok)

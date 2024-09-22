@@ -6,6 +6,7 @@ import { useAuthContext } from '../../hooks/useAuthContext'
 import ErrorToast from '../UI/ErrorToast'
 import SuccessToast from '../UI/SuccessToast'
 import CompanyInputs from './Components/CompanyInputs'
+import Toast from '../UI/Toast'
 
 function Company() {
 	const { user } = useAuthContext()
@@ -37,6 +38,7 @@ function Company() {
 			>
 				<div className='card-body'>
 					{isError && <ErrorToast>{error.message}</ErrorToast>}
+					<Toast message={error?.message} show={isError} />
 					{mutation.isError && (
 						<ErrorToast>{mutation.error.message}</ErrorToast>
 					)}
@@ -45,9 +47,9 @@ function Company() {
 					)}
 					{isPending ? (
 						<p>Loading ...</p>
-					) : (
+					) : !isError ? (
 						<CompanyInputs company={company} mutation={mutation} />
-					)}
+					) : null}
 				</div>
 			</div>
 		</>

@@ -22,23 +22,21 @@ export const authReducer = (state, action) => {
 
 export const AuthContextProvider = ({ children }) => {
 	const [state, dispatchState] = useReducer(authReducer, {
-		user: {},
+		user: JSON.parse(localStorage.getItem('user')),
 	})
 
 	useEffect(() => {
-		const user = JSON.parse(localStorage.getItem('user'))
-
-		if (user) {
-			const decodedToken = jwtDecode(user.token)
+		if (state.user) {
+			const decodedToken = jwtDecode(state.user.token)
 			const currentTime = Date.now() / 1000
 
 			if (decodedToken.exp > currentTime) {
-				user.enabled = decodedToken.enabled
-				user.role = decodedToken.role
+				state.user.enabled = decodedToken.enabled
+				state.user.role = decodedToken.role
 
-				dispatchState({ type: 'LOGIN', payload: user })
+				dispatchState({ type: 'LOGIN', payload: state.user })
 			} else {
-				dispatchState({ type: 'LOGOUT', payload: user })
+				dispatchState({ type: 'LOGOUT', payload: state.user })
 			}
 		}
 	}, [])

@@ -36,7 +36,6 @@ function useLogin() {
 			// update the auth context
 			dispatchState({ type: 'LOGIN', payload: json.user })
 			setLoading(false)
-			console.log(json.user)
 			return json.user
 		}
 	}

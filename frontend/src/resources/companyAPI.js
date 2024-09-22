@@ -1,13 +1,13 @@
 const API_URL = import.meta.env.VITE_DATABASE_URL
 const user = JSON.parse(localStorage.getItem('user'))
 import axios from 'axios'
-
 const OPTIONS = {
 	headers: {
-		Authorization: 'Bearer ' + user.token,
+		Authorization: 'Bearer ' + user?.token,
 		'Content-Type': 'application/json',
 	},
 }
+
 const apiFns = {
 	// #########################################################
 	// ################# Company routes ########################
@@ -16,6 +16,9 @@ const apiFns = {
 	// Fetch a single company based in ID
 	fetchCompany: async ({ queryKey }) => {
 		const { companyId } = queryKey[1]
+		if (!companyId) {
+			throw Error('Bedrift-objekt ikke tilgjengelig')
+		}
 		try {
 			const endpoint = `${API_URL}/companies/${companyId}`
 			const response = await fetch(endpoint, OPTIONS)
@@ -32,6 +35,9 @@ const apiFns = {
 	},
 	// Update a single company based on a ID
 	updateCompany: async ({ company }) => {
+		if (!company) {
+			throw Error('Bedrift-objekt ikke tilgjengelig')
+		}
 		try {
 			const endpoint = `${API_URL}/companies/${company._id}`
 			const response = await fetch(endpoint, {

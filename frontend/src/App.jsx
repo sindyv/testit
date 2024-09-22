@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { RouterProvider } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import ProtectedRoute from './routes/ProtectedRoute.jsx'
 import Root from './routes/Root.jsx'
 import ErrorPage from './routes/ErrorPage.jsx'
@@ -275,6 +276,7 @@ function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<RouterProvider router={router} />
+			{/* <ReactQueryDevtools /> */}
 		</QueryClientProvider>
 	)
 }
