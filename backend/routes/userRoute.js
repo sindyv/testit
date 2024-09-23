@@ -6,6 +6,7 @@ const {
 	signupUser,
 	loginUser,
 	fetchUsersFromCompany,
+	updateUser,
 } = require('../controllers/userController')
 
 router.post('/signup', signupUser)
@@ -14,11 +15,12 @@ router.post('/login', loginUser)
 
 router.use(requireAuth)
 
-router.get('/:companyId', fetchUsersFromCompany)
+router.get('/', fetchUsersFromCompany)
+router.put('/:userId', updateUser)
 
-router.get('/', async (req, res) => {
-	let users = await User.find().populate('company').exec()
-	res.status(200).json({ users })
-})
+// router.get('/', async (req, res) => {
+// 	let users = await User.find().populate('company').exec()
+// 	res.status(200).json({ users })
+// })
 
 module.exports = router

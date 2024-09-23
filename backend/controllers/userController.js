@@ -107,9 +107,9 @@ const loginUser = async (req, res) => {
 }
 
 const fetchUsersFromCompany = async (req, res) => {
-	const { companyId } = req.params
+	const query = req?.query ?? {}
 	try {
-		const users = await User.find({ company: companyId })
+		const users = await User.find(query)
 		if (!users) {
 			throw Error('Kunne ikke finne noen brukere i dette firmaet')
 		}
@@ -118,4 +118,27 @@ const fetchUsersFromCompany = async (req, res) => {
 		res.status(400).json({ error: error.message || 'Noe gikk galt' })
 	}
 }
-module.exports = { signupUser, loginUser, fetchUsersFromCompany }
+
+const updateUser = async (req, res) => {
+	const { user } = req.body
+	try {
+		const beforeUpdate = await User.findOneAndUpdate(
+			{ _id: user._id },
+			user
+		)
+
+		const newUser = await User.findById(user._id)
+		if (!newUser) {
+			throw Error('Kunne ikke oppdatere brukeren')
+		}
+		res.status(200).json({ newUser })
+	} catch (error) {
+		res.status(400).json({ error: error.message || 'Noe gikk galt' })
+	}
+}
+module.exports = {
+	signupUser,
+	loginUser,
+	fetchUsersFromCompany,
+	updateUser,
+}

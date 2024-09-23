@@ -34,10 +34,8 @@ function ProjectList() {
 
 	const handleSetFilters = (filter) => {
 		setFilters((prev) => ({ company: user.company, ...filter }))
-		console.log(filters)
 	}
 
-	console.log(data)
 	return (
 		<div className='card shadow rounded-4 mt-5'>
 			<div className='card-body'>

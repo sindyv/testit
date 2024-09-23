@@ -2,20 +2,17 @@ const mongoose = require('mongoose')
 
 const projectSchema = new mongoose.Schema(
 	{
-		name: {
+		projectName: {
 			type: String,
 			required: true,
 		},
-		description: {
+		projectDescription: {
 			type: String,
 		},
-		streetName: {
+		address: {
 			type: String,
 		},
-		streetNumber: {
-			type: String,
-		},
-		postalCode: {
+		postnu: {
 			type: Number,
 		},
 		city: {
@@ -32,7 +29,7 @@ const projectSchema = new mongoose.Schema(
 				ref: 'User',
 			},
 		],
-		webHotel: {
+		webhotel: {
 			type: String,
 		},
 		owner: {
@@ -45,9 +42,25 @@ const projectSchema = new mongoose.Schema(
 			type: Date,
 			required: true,
 		},
+		started: {
+			type: Boolean,
+			default: false,
+			required: true,
+		},
+		completed: {
+			type: Boolean,
+			default: false,
+			required: true,
+		},
+		deactivated: {
+			type: Boolean,
+			default: false,
+			required: true,
+		},
 		createdBy: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'User',
+			required: true,
 		},
 		createdAt: {
 			type: Date,
@@ -69,4 +82,40 @@ projectSchema.pre('save', function (next) {
 	this.updatedAt = Date.now()
 	next()
 })
+
+projectSchema.statics.createProject = async function (projectObject) {
+	const {
+		projectName,
+		projectDescription,
+		address,
+		city,
+		postnu,
+		owner,
+		endDate,
+		webhotel,
+		company,
+		createdBy,
+		users,
+	} = projectObject
+	console.log(projectObject)
+	if (!projectName || !projectDescription || !endDate) {
+		throw Error('Vennligst fyll ut nødvendige felter')
+	}
+
+	const project = this.create({
+		projectName,
+		projectDescription,
+		address,
+		city,
+		postnu,
+		owner,
+		endDate,
+		webhotel,
+		company,
+		createdBy,
+		users,
+	})
+
+	return project
+}
 module.exports = mongoose.model('Project', projectSchema)

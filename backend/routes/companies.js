@@ -24,7 +24,6 @@ router.get('/', async (req, res) => {
 
 // Create a new company
 router.post('/new', async (req, res) => {
-	console.log(req.body)
 	const company = new Company({
 		name: req.body.name,
 		users: [],

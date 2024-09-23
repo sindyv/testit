@@ -77,17 +77,6 @@ externalCompanyuSchema.statics.addExternalCompany = async function (
 	postnu,
 	user
 ) {
-	console.log({
-		companyName,
-		orgNu,
-		email,
-		streetnu,
-		streetname,
-		website,
-		city,
-		postnu,
-		user,
-	})
 	if (!companyName || !orgNu || !email) {
 		throw Error('Please fill all inn all fields')
 	}

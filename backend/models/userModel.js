@@ -50,6 +50,11 @@ const userSchema = new mongoose.Schema(
 			required: true,
 			default: false,
 		},
+		active: {
+			type: Boolean,
+			required: true,
+			default: true,
+		},
 	},
 	{
 		toJSON: true,

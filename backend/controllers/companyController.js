@@ -12,7 +12,8 @@ const fetchCompany = async (req, res) => {
 		res.status(200).json({ company })
 	} catch (error) {
 		res.status(400).json({
-			message: 'Vi fant ikke bedriften du leter etter :(',
+			message:
+				error.message || 'Vi fant ikke bedriften du leter etter :(',
 		})
 	}
 }
