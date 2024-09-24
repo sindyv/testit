@@ -1,10 +1,15 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Card from '../../../UI/Card'
 import ThreeDotsDropdown from '../../../UI/ThreeDotsDropdown'
 
 function ProjectSystemList() {
+	const navigate = useNavigate()
 	return (
-		<Card title={'Systemoversikt'} className={'mt-3'}>
+		<Card
+			title={'Systemoversikt'}
+			className={'mt-3'}
+			addbutton={() => navigate('add')}
+		>
 			<table className='table'>
 				<thead>
 					<tr>

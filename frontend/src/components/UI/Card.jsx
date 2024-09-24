@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-function Card({ children, className, title, backbutton }) {
+function Card({ children, className, title, backbutton, addbutton }) {
 	const navigate = useNavigate()
 	return (
 		<>
@@ -15,7 +15,17 @@ function Card({ children, className, title, backbutton }) {
 			)}
 			<div className={`card rounded-4 p-2 ${className}`}>
 				<div className='card-body'>
-					<h3 className='fw-normal'>{title}</h3>
+					<div className='d-flex justify-content-between align-items-center'>
+						<h3 className='fw-normal'>{title}</h3>
+						{addbutton && (
+							<button
+								className='btn btn-primary'
+								onClick={addbutton}
+							>
+								Legg til
+							</button>
+						)}
+					</div>
 					{children}
 				</div>
 			</div>

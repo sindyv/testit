@@ -4,9 +4,13 @@ import projectsAPI from '../../../resources/projectsAPI'
 import ProjectListTableLine from './Components/ProjectListTableLine'
 import Toast from '../../UI/Toast'
 import { useState } from 'react'
+import FilterButton from './Components/FilterButton'
 function ProjectList() {
 	const { user } = useAuthContext()
-	const [filters, setFilters] = useState({ company: user.company })
+	const [filters, setFilters] = useState({
+		filters: { company: user.company },
+		button: 'aktive',
+	})
 	// Access the client
 	const queryClient = useQueryClient()
 
@@ -15,7 +19,7 @@ function ProjectList() {
 		queryKey: [
 			'projects',
 			{
-				query: filters,
+				query: filters.filters,
 			},
 		],
 		queryFn: projectsAPI.fetchProjects,
@@ -33,55 +37,113 @@ function ProjectList() {
 	})
 
 	const handleSetFilters = (filter) => {
-		setFilters((prev) => ({ company: user.company, ...filter }))
+		setFilters((prev) => ({
+			filters: { company: user.company, ...filter.filters },
+			button: filter.button,
+		}))
 	}
-
-	console.log('trest')
 
 	return (
 		<div className='card shadow rounded-4 mt-5'>
 			<div className='card-body'>
 				<h3>Prosjekter</h3>
 				<div className='d-flex gap-1'>
-					<button
-						className={`btn badge ${
-							filters?.deactivated
-								? 'text-bg-primary'
-								: 'text-bg-secondary'
-						}  p-2`}
+					<FilterButton
 						onClick={() => {
-							handleSetFilters({ deactivated: false })
+							handleSetFilters({
+								filters: { deactivated: false },
+								button: 'active',
+							})
 						}}
-					>
-						Aktive
-					</button>
-					<button
+						filter={filters}
+						buttonActiveText={'active'}
+						buttonText={'Aktive'}
+					/>
+					<FilterButton
+						onClick={() => {
+							handleSetFilters({
+								filters: { deactivated: true },
+								button: 'inactive',
+							})
+						}}
+						filter={filters}
+						buttonActiveText={'inactive'}
+						buttonText={'Deaktiverte'}
+					/>
+					<FilterButton
+						onClick={() => {
+							handleSetFilters({
+								filters: { started: false },
+								button: 'not started',
+							})
+						}}
+						filter={filters}
+						buttonActiveText={'not started'}
+						buttonText={'Ikke påbegynt'}
+					/>
+					<FilterButton
+						onClick={() => {
+							handleSetFilters({
+								filters: { started: true, completed: false },
+								button: 'started',
+							})
+						}}
+						filter={filters}
+						buttonActiveText={'started'}
+						buttonText={'Pågår'}
+					/>
+					<FilterButton
+						onClick={() => {
+							handleSetFilters({
+								filters: { completed: true },
+								button: 'completed',
+							})
+						}}
+						filter={filters}
+						buttonActiveText={'completed'}
+						buttonText={'Ferdige'}
+					/>
+					<FilterButton
+						onClick={() => {
+							handleSetFilters({
+								filters: {},
+								button: 'all',
+							})
+						}}
+						filter={filters}
+						buttonActiveText={'all'}
+						buttonText={'Alle'}
+					/>
+
+					{/* <button
 						className={`btn badge ${
-							!filters?.deactivated
+							filterButtons === 'inactive'
 								? 'text-bg-primary'
 								: 'text-bg-secondary'
 						}  p-2`}
 						onClick={() => {
 							handleSetFilters({ deactivated: true })
+							setFilterButtons('inactive')
 						}}
 					>
 						Inaktive
 					</button>
 					<button
 						className={`btn badge ${
-							filters?.started
+							filterButtons === 'not started'
 								? 'text-bg-primary'
 								: 'text-bg-secondary'
 						}  p-2`}
 						onClick={() => {
 							handleSetFilters({ started: false })
+							setFilterButtons('not started')
 						}}
 					>
 						Ikke påbegynt
 					</button>
 					<button
 						className={`btn badge ${
-							!filters?.started
+							filterButtons === 'started'
 								? 'text-bg-primary'
 								: 'text-bg-secondary'
 						}  p-2`}
@@ -90,34 +152,37 @@ function ProjectList() {
 								started: true,
 								completed: false,
 							})
+							setFilterButtons('started')
 						}}
 					>
 						Pågår
 					</button>
 					<button
 						className={`btn badge ${
-							filters?.completed
+							filterButtons === 'completed'
 								? 'text-bg-primary'
 								: 'text-bg-secondary'
 						}  p-2`}
 						onClick={() => {
 							handleSetFilters({ completed: true })
+							setFilterButtons('completed')
 						}}
 					>
 						Ferdigstilt
 					</button>
 					<button
 						className={`btn badge ${
-							filters?.deactivated
+							filterButtons === 'all'
 								? 'text-bg-primary'
 								: 'text-bg-secondary'
 						}  p-2`}
 						onClick={() => {
 							handleSetFilters({})
+							setFilterButtons('all')
 						}}
 					>
 						Alle
-					</button>
+					</button> */}
 				</div>
 				<Toast message={error?.message} show={isError} />
 				{isPending && <p>Loading ...</p>}
