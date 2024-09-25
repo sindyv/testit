@@ -33,6 +33,7 @@ function useLogin() {
 			// decode the token to add the "enabled"-feature to the user object
 			const decodedToken = jwtDecode(json.user.token)
 			json.user.enabled = decodedToken.enabled
+			json.user.role = decodedToken.role
 			// update the auth context
 			dispatchState({ type: 'LOGIN', payload: json.user })
 			setLoading(false)

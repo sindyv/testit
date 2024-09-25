@@ -27,6 +27,7 @@ function Navigation() {
 	]
 
 	const { user } = useAuthContext()
+	console.log(user)
 	return (
 		<div
 			className={`border-end rounded-end-4 border-2 min-vh-100 d-flex flex-align-center flex-column justify-content-between ${styles.sidebar} `}

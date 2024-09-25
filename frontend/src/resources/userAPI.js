@@ -2,7 +2,7 @@ const API_URL = import.meta.env.VITE_DATABASE_URL
 const user = JSON.parse(localStorage.getItem('user'))
 const OPTIONS = {
 	headers: {
-		Authorization: 'Bearer ' + user.token,
+		Authorization: 'Bearer ' + user?.token,
 		'Content-Type': 'application/json',
 	},
 }
