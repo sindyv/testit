@@ -60,7 +60,7 @@ function ProjectListTableLine({ project, mutation }) {
 				</div>
 			</td>
 			<td>{project.endDate.split('T')[0]}</td>
-			<td className=''>
+			<td className='d-none d-lg-block'>
 				{project.users.map((user) => {
 					return (
 						<span
@@ -89,7 +89,7 @@ function ProjectListTableLine({ project, mutation }) {
 					</span>
 				)}
 			</td>
-			<td>13/29</td>
+			<td className='d-none d-md-block'>13/29</td>
 			<td>
 				<div className='d-flex justify-content-between'>
 					<span>11</span>

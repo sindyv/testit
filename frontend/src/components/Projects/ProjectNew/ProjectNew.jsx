@@ -32,19 +32,21 @@ function ProjectNew() {
 	})
 
 	return (
-		<div className={`card mt-5 rounded-4 shadow `}>
-			<div className='card-body'>
-				<h3>Opprett prosjekt</h3>
-				{isError && <ErrorToast>{error.message}</ErrorToast>}
-				{mutation.isError && (
-					<ErrorToast>{mutation.error.message}</ErrorToast>
-				)}
-				{mutation.isSuccess && (
-					<SuccessToast>Data oppdatert</SuccessToast>
-				)}
-				{isSuccess && (
-					<NewProjectInputs data={data} mutation={mutation} />
-				)}
+		<div className='container-sm'>
+			<div className={`card mt-5 rounded-4 shadow `}>
+				<div className='card-body'>
+					<h3>Opprett prosjekt</h3>
+					{isError && <ErrorToast>{error.message}</ErrorToast>}
+					{mutation.isError && (
+						<ErrorToast>{mutation.error.message}</ErrorToast>
+					)}
+					{mutation.isSuccess && (
+						<SuccessToast>Data oppdatert</SuccessToast>
+					)}
+					{isSuccess && (
+						<NewProjectInputs data={data} mutation={mutation} />
+					)}
+				</div>
 			</div>
 		</div>
 	)

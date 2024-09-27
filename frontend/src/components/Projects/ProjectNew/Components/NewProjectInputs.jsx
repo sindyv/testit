@@ -1,6 +1,10 @@
 import { useForm } from 'react-hook-form'
 import useGetUser from '../../../../hooks/useGetUser'
-
+import Form from 'react-bootstrap/Form'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import { Button } from 'react-bootstrap'
 function NewProjectInputs({ data, mutation }) {
 	const { register, handleSubmit } = useForm({
 		defaultValues: { projectName: 'Ditt prosjekt' },
@@ -17,78 +21,62 @@ function NewProjectInputs({ data, mutation }) {
 		})
 	}
 	return (
-		<form onSubmit={handleSubmit(onSubmit)}>
-			<div className='d-flex'>
-				<div className={'mb-3 flex-fill m-2'}>
-					<label htmlFor={'projectName'} className='form-label'>
-						Prosjektnavn
-					</label>
-					<input
+		<Form onSubmit={handleSubmit(onSubmit)}>
+			<Row className=' mt-3'>
+				<Col md>
+					<Form.Label htmlFor='projectName'>Prosjektnavn</Form.Label>
+					<Form.Control
+						id='projectName'
 						{...register('projectName')}
-						className='form-control'
 					/>
-				</div>
-				<div className={'mb-3 flex-fill m-2'}>
-					<label
-						htmlFor={'projectDescription'}
-						className='form-label'
-					>
+				</Col>
+				<Col md>
+					<Form.Label htmlFor='projectDescription'>
 						Beskrivelse
-					</label>
-					<input
+					</Form.Label>
+					<Form.Control
+						id='projectDescription'
 						{...register('projectDescription')}
-						className='form-control'
+						placeholder='En enkel beskrivelse av prosjektet'
 					/>
-				</div>
-			</div>
-			<div className='d-flex'>
-				<div className={'mb-3 flex-fill m-2 minw-300'}>
-					<label htmlFor={'address'} className='form-label'>
-						Adresse
-					</label>
-					<input {...register('address')} className='form-control' />
-				</div>
-
-				<div className={'mb-3 flex-fill m-2 mw-75   '}>
-					<label htmlFor={'postnu'} className='form-label'>
-						Postnr.
-					</label>
-					<input {...register('postnu')} className='form-control' />
-				</div>
-				<div className={'mb-3 flex-fill m-2'}>
-					<label htmlFor={'city'} className='form-label'>
-						By
-					</label>
-					<input {...register('city')} className='form-control' />
-				</div>
-			</div>
-			<div className='d-flex'>
-				<div className={'mb-3 flex-fill m-2'}>
-					<label htmlFor={'webhotel'} className='form-label'>
+				</Col>
+			</Row>
+			<Row className='gy-2 mt-2'>
+				<Col md='5'>
+					<Form.Label htmlFor='address'>Adresse</Form.Label>
+					<Form.Control id='address' {...register('address')} />
+				</Col>
+				<Col md='2'>
+					<Form.Label htmlFor='postnu'>Postnr.</Form.Label>
+					<Form.Control id='postnu' {...register('postnu')} />
+				</Col>
+				<Col md='5'>
+					<Form.Label htmlFor='city'>By</Form.Label>
+					<Form.Control id='city' {...register('city')} />
+				</Col>
+			</Row>
+			<Row className='gy-2 mt-2'>
+				<Col md>
+					<Form.Label htmlFor='webhotel'>
 						Adresse til webhotell
-					</label>
-					<input {...register('webhotel')} className='form-control' />
-				</div>
-				<div className={'mb-3 flex-fill m-2'}>
-					<label htmlFor={'endDate'} className='form-label'>
-						Sluttdato
-					</label>
-					<input
-						{...register('endDate')}
-						type='date'
-						className='form-control'
+					</Form.Label>
+					<Form.Control
+						placeholder='http://'
+						id='webhotel'
+						{...register('webhotel')}
 					/>
-				</div>
-				<div className='mb-3 m-2'>
-					<label htmlFor={'role'} className='form-label'>
-						Ansvarlig
-					</label>
-
-					<select
-						{...register('owner')}
-						className='form-select m-0'
-						aria-label='ProjectOwner'
-					>
+				</Col>
+				<Col md>
+					<Form.Label htmlFor='endDate'>Sluttdato</Form.Label>
+					<Form.Control
+						type='date'
+						id='endDate'
+						{...register('endDate')}
+					/>
+				</Col>
+				<Col lg>
+					<Form.Label htmlFor='owner'>Ansvarlig</Form.Label>
+					<Form.Select id='owner' {...register('owner')}>
 						{data.users.length > 0
 							? data.users.map((user, index) => {
 									return (
@@ -98,15 +86,17 @@ function NewProjectInputs({ data, mutation }) {
 									)
 							  })
 							: null}
-					</select>
-				</div>
-			</div>
-			<div>
-				<button className='btn btn-primary' type='submit'>
-					Opprett
-				</button>
-			</div>
-		</form>
+					</Form.Select>
+				</Col>
+			</Row>
+			<Row className='mt-2'>
+				<Col>
+					<Button variant='primary' type='submit'>
+						Opprett
+					</Button>
+				</Col>
+			</Row>
+		</Form>
 	)
 }
 

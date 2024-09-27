@@ -9,7 +9,7 @@ function ProjectList() {
 	const { user } = useAuthContext()
 	const [filters, setFilters] = useState({
 		filters: { company: user.company },
-		button: 'aktive',
+		button: 'active',
 	})
 	// Access the client
 	const queryClient = useQueryClient()
@@ -114,75 +114,6 @@ function ProjectList() {
 						buttonActiveText={'all'}
 						buttonText={'Alle'}
 					/>
-
-					{/* <button
-						className={`btn badge ${
-							filterButtons === 'inactive'
-								? 'text-bg-primary'
-								: 'text-bg-secondary'
-						}  p-2`}
-						onClick={() => {
-							handleSetFilters({ deactivated: true })
-							setFilterButtons('inactive')
-						}}
-					>
-						Inaktive
-					</button>
-					<button
-						className={`btn badge ${
-							filterButtons === 'not started'
-								? 'text-bg-primary'
-								: 'text-bg-secondary'
-						}  p-2`}
-						onClick={() => {
-							handleSetFilters({ started: false })
-							setFilterButtons('not started')
-						}}
-					>
-						Ikke påbegynt
-					</button>
-					<button
-						className={`btn badge ${
-							filterButtons === 'started'
-								? 'text-bg-primary'
-								: 'text-bg-secondary'
-						}  p-2`}
-						onClick={() => {
-							handleSetFilters({
-								started: true,
-								completed: false,
-							})
-							setFilterButtons('started')
-						}}
-					>
-						Pågår
-					</button>
-					<button
-						className={`btn badge ${
-							filterButtons === 'completed'
-								? 'text-bg-primary'
-								: 'text-bg-secondary'
-						}  p-2`}
-						onClick={() => {
-							handleSetFilters({ completed: true })
-							setFilterButtons('completed')
-						}}
-					>
-						Ferdigstilt
-					</button>
-					<button
-						className={`btn badge ${
-							filterButtons === 'all'
-								? 'text-bg-primary'
-								: 'text-bg-secondary'
-						}  p-2`}
-						onClick={() => {
-							handleSetFilters({})
-							setFilterButtons('all')
-						}}
-					>
-						Alle
-					</button> */}
 				</div>
 				<Toast message={error?.message} show={isError} />
 				{isPending && <p>Loading ...</p>}
@@ -192,9 +123,13 @@ function ProjectList() {
 							<tr>
 								<th scope='col'>Prosjekt</th>
 								<th scope='col'>Sluttdato</th>
-								<th scope='col'>Deltakere</th>
+								<th scope='col' className='d-none d-lg-block'>
+									Deltakere
+								</th>
 								<th scope='col'>Status</th>
-								<th scope='col'>Tester</th>
+								<th scope='col' className='d-none d-md-block'>
+									Tester
+								</th>
 								<th scope='col'>Avvik</th>
 							</tr>
 						</thead>

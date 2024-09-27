@@ -1,7 +1,12 @@
 import Modal from './Modal'
 import { useForm } from 'react-hook-form'
 
-function Modals() {
+function Modals({
+	showSysLocModal,
+	setShowSysLocModal,
+	showSysNumModal,
+	setShowSysNumModal,
+}) {
 	const {
 		register: regLocCode,
 		handleSubmit: handleSubLocCode,
@@ -15,6 +20,8 @@ function Modals() {
 	} = useForm({})
 	const onSubmit = (data) => {
 		console.log(data)
+		setShowSysLocModal(false)
+		setShowSysNumModal(false)
 		resetLocCode()
 		resetSysCode()
 	}
@@ -22,8 +29,9 @@ function Modals() {
 		<>
 			<Modal
 				title={'Legg til systemlokasjon'}
-				modalId={'systemLocationModal'}
+				show={showSysLocModal}
 				onSubmit={handleSubLocCode(onSubmit)}
+				onClose={() => setShowSysLocModal(false)}
 			>
 				<div className={'mb-3 flex-fill m-2'}>
 					<label htmlFor={'locCode'} className='form-label'>
@@ -49,9 +57,10 @@ function Modals() {
 			</Modal>
 
 			<Modal
+				show={showSysNumModal}
 				title={'Legg til systemnummer'}
-				modalId={'systemNumberModal'}
 				onSubmit={handleSubSysCode(onSubmit)}
+				onClose={() => setShowSysNumModal(false)}
 			>
 				<div className={'mb-3 flex-fill m-2'}>
 					<label htmlFor={'sysCode'} className='form-label'>
