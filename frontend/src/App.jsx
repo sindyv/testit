@@ -28,6 +28,7 @@ import ProjectDashboard from './components/Projects/ProjectDashboard/ProjectDash
 import System from './components/Projects/ProjectDashboard/System/System.jsx'
 import Signup from './components/Unprotected/Signup/Signup.jsx'
 import AddSystem from './components/Projects/ProjectDashboard/SystemList/AddSystem/AddSystem.jsx'
+import AddSystemContextProvider from './store/addSystemContext.jsx'
 
 function App() {
 	const { user } = useAuthContext()
@@ -180,7 +181,9 @@ function App() {
 											path: 'add',
 											element: (
 												<ProtectedRoute>
-													<AddSystem />
+													<AddSystemContextProvider>
+														<AddSystem />
+													</AddSystemContextProvider>
 												</ProtectedRoute>
 											),
 											errorElement: <ErrorPage />,
