@@ -1,17 +1,17 @@
-import useLogout from '../../hooks/useLogout'
-import styles from './Navigation.module.css'
-import { Link } from 'react-router-dom'
+import useLogout from "../../hooks/useLogout"
+import styles from "./Navigation.module.css"
+import { Link } from "react-router-dom"
 
-import NavigationLink from './NavigationLink'
+import NavigationLink from "./NavigationLink"
 
-import { DashboardIcon } from '../../assets/icons/dashboard.jsx'
+import { DashboardIcon } from "../../assets/icons/dashboard.jsx"
 
-import { MainLogo } from '../../assets/svg/MainLogo.jsx'
-import NavProjectCollapsable from './NavProjectCollapsable.jsx'
-import { useAuthContext } from '../../hooks/useAuthContext.js'
-import ThreeDotsDropdown from '../UI/ThreeDotsDropdown.jsx'
-import NavCompaniesCollapsable from './NavCompaniesCollapsable.jsx'
-import NavUsersCollapsable from './NavUsersCollapsable.jsx'
+import { MainLogo } from "../../assets/svg/MainLogo.jsx"
+import NavProjectCollapsable from "./NavProjectCollapsable.jsx"
+import { useAuthContext } from "../../hooks/useAuthContext.js"
+import ThreeDotsDropdown from "../UI/ThreeDotsDropdown.jsx"
+import NavCompaniesCollapsable from "./NavCompaniesCollapsable.jsx"
+import NavUsersCollapsable from "./NavUsersCollapsable.jsx"
 
 function Navigation() {
 	const { logout } = useLogout()
@@ -21,32 +21,31 @@ function Navigation() {
 
 	const userMenu = [
 		{
-			title: 'Logg ut',
+			title: "Logg ut",
 			function: handleLogout,
 		},
 	]
 
 	const { user } = useAuthContext()
-	console.log(user)
 	return (
 		<div
 			className={`border-end rounded-end-4 border-2 min-vh-100 d-flex flex-align-center flex-column justify-content-between ${styles.sidebar} `}
 		>
-			<div id='side-nav'>
-				<div className='d-flex justify-content-center mt-3'>
+			<div id="side-nav">
+				<div className="d-flex justify-content-center mt-3">
 					<MainLogo />
 				</div>
 
-				<ul className='nav flex-column'>
+				<ul className="nav flex-column">
 					<NavigationLink
-						url={''}
-						linkTitle={'Dashboard'}
+						url={""}
+						linkTitle={"Dashboard"}
 						svg={<DashboardIcon />}
 					/>
 					{user.enabled ? (
 						<>
 							<NavProjectCollapsable />
-							{user.role === 'Administrator' && (
+							{user.role === "Administrator" && (
 								<>
 									<NavUsersCollapsable />
 									<NavCompaniesCollapsable />
@@ -56,7 +55,7 @@ function Navigation() {
 					) : null}
 				</ul>
 			</div>
-			<div className='d-flex justify-content-around'>
+			<div className="d-flex justify-content-around">
 				<p
 				// onClick={handleLogout}
 				>

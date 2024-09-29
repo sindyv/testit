@@ -1,7 +1,7 @@
-import Button from 'react-bootstrap/Button'
-import BootstrapModal from 'react-bootstrap/Modal'
+import Button from "react-bootstrap/Button"
+import BootstrapModal from "react-bootstrap/Modal"
 
-function Modal({ title, show, children, onSubmit, onClose }) {
+function Modal({ title, show, children, onSubmit, onClose, error }) {
 	return (
 		<BootstrapModal show={show} onHide={onClose} centered>
 			<BootstrapModal.Header closeButton>
@@ -9,10 +9,10 @@ function Modal({ title, show, children, onSubmit, onClose }) {
 			</BootstrapModal.Header>
 			<BootstrapModal.Body>{children}</BootstrapModal.Body>
 			<BootstrapModal.Footer>
-				<Button variant='secondary' onClick={onClose}>
+				<Button variant="secondary" onClick={onClose}>
 					Lukk
 				</Button>
-				<Button variant='primary' onClick={onSubmit}>
+				<Button variant="primary" onClick={onSubmit}>
 					Legg til
 				</Button>
 			</BootstrapModal.Footer>

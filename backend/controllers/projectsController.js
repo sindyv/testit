@@ -1,18 +1,18 @@
-const Project = require('../models/projectModel')
-const User = require('../models/userModel')
+const Project = require("../models/projectModel")
+const User = require("../models/userModel")
 
 const getProjects = async (req, res) => {
 	const query = req?.query ?? {}
 	console.log(query)
 	try {
-		const projects = await Project.find(query).populate('users').exec()
+		const projects = await Project.find(query).populate("users").exec()
 		if (!projects) {
-			throw Error('Kunne ikke finne noen brukere i dette firmaet')
+			throw Error("Kunne ikke finne noen brukere i dette firmaet")
 		}
 		res.status(200).json({ projects })
 	} catch (error) {
 		console.log(error)
-		res.status(400).json({ error: error.message || 'Noe gikk galt' })
+		res.status(400).json({ error: error.message || "Noe gikk galt" })
 	}
 	// let projects = await Project.find().populate('users').exec()
 	// res.status(200).json({ projects })
@@ -36,7 +36,7 @@ const addProject = async (req, res) => {
 		res.status(201).json({ newProject })
 	} catch (error) {
 		res.status(400).json({
-			message: error.message || 'Vi klarte ikke å opprette prosjektet',
+			message: error.message || "Vi klarte ikke å opprette prosjektet",
 		})
 	}
 }
@@ -52,13 +52,45 @@ const updateProject = async (req, res) => {
 
 		const newProject = await Project.findById(projectId)
 		if (!newProject) {
-			throw Error('Kunne ikke oppdatere prosjektet')
+			throw Error("Kunne ikke oppdatere prosjektet")
 		}
 		res.status(200).json({ newProject })
 	} catch (error) {
 		console.log(error)
-		res.status(400).json({ error: error.message || 'Noe gikk galt' })
+		res.status(400).json({ error: error.message || "Noe gikk galt" })
 	}
 }
 
-module.exports = { getProjects, addProject, updateProject }
+const addSystemLocationCode = async (req, res) => {
+	const { projectId } = req.params
+	const { systemLocation } = req.body
+	console.log(systemLocation)
+
+	try {
+		// Find project
+		const project = await Project.findById(projectId)
+
+		// Push system location code to project
+		project.systemLocations.push({
+			name: systemLocation.locCode,
+			description: systemLocation.description,
+		})
+
+		// Save project
+		await project.save()
+
+		// Return project
+		res.status(201).json({ project })
+	} catch (error) {
+		res.status(400).json({
+			message: error.message || "Vi klarte ikke å opprette systemlokasjonen",
+		})
+	}
+}
+
+module.exports = {
+	getProjects,
+	addProject,
+	updateProject,
+	addSystemLocationCode,
+}
