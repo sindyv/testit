@@ -1,13 +1,14 @@
-import { createContext, useReducer, useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
-import projectsAPI from '../resources/projectsAPI'
-import { useForm } from 'react-hook-form'
+import { createContext, useReducer, useState } from "react"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useParams } from "react-router-dom"
+import projectsAPI from "../resources/projectsAPI"
+import { useForm } from "react-hook-form"
+import useUpdateDataMutation from "../hooks/useUpdateDataMutation"
 export const AddSystemContext = createContext()
 
 const addSystemReducer = (state, action) => {
 	switch (action.type) {
-		case 'asd':
+		case "asd":
 			return
 	}
 }
@@ -22,7 +23,7 @@ function AddSystemContextProvider({ children }) {
 	// Queries
 	const { isPending, isError, data, error } = useQuery({
 		queryKey: [
-			'projects',
+			"projects",
 			{
 				query: {
 					_id: projectId,
@@ -33,11 +34,35 @@ function AddSystemContextProvider({ children }) {
 	})
 
 	// Mutations
-	const mutation = useMutation({
-		mutationFn: async (projectObject) =>
-			projectsAPI.createProject(projectObject),
-		onSuccess: (data) => {},
-	})
+	const invalidateQuery = () => {
+		queryClient.invalidateQueries({
+			queryKey: [
+				"projects",
+				{
+					query: {
+						_id: projectId,
+					},
+				},
+			],
+		})
+	}
+	const mutateNewLocationCode = async (data) => {
+		projectsAPI.createSystemLocation({ data, projectId })
+	}
+
+	const mutateNewSystemCode = async (data) => {
+		projectsAPI.createSystemCode({ data, projectId })
+	}
+
+	const locationCodeMutation = useUpdateDataMutation(
+		mutateNewLocationCode,
+		invalidateQuery
+	)
+
+	const systemCodeMutation = useUpdateDataMutation(
+		mutateNewSystemCode,
+		invalidateQuery
+	)
 
 	// Make a 'users'-array
 	const users = []
@@ -67,7 +92,8 @@ function AddSystemContextProvider({ children }) {
 			isError,
 			error,
 		},
-		mutation,
+		locationCodeMutation,
+		systemCodeMutation,
 	}
 
 	return (

@@ -68,9 +68,9 @@ export default {
 			throw error
 		}
 	},
-	// Update a single company based on a ID
+	// Create a system location
 	createSystemLocation: async ({ data, projectId }) => {
-		if (!FormDataEvent) {
+		if (!data) {
 			throw Error("Lokasjons-objekt ikke tilgjengelig")
 		}
 		try {
@@ -80,6 +80,31 @@ export default {
 				method: "POST",
 				...OPTIONS,
 				body: JSON.stringify({ systemLocation: { ...data } }),
+			})
+
+			const json = await response.json()
+			if (!response.ok) {
+				console.log(json?.message)
+				throw Error(json?.message ?? "Feil ved oppretting av data")
+			}
+			return json
+		} catch (error) {
+			// forward the error to Tanstack Query
+			throw error
+		}
+	},
+	// Create a system code (main system)
+	createSystemCode: async ({ data, projectId }) => {
+		if (!data) {
+			throw Error("Systemkode-objekt ikke tilgjengelig")
+		}
+		try {
+			const endpoint = `${API_URL}/projects/${projectId}/systems/codes`
+			console.log(endpoint)
+			const response = await fetch(endpoint, {
+				method: "POST",
+				...OPTIONS,
+				body: JSON.stringify({ systemCode: { ...data } }),
 			})
 
 			const json = await response.json()

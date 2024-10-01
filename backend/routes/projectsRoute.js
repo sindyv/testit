@@ -6,6 +6,7 @@ const {
 	addProject,
 	updateProject,
 	addSystemLocationCode,
+	addSystemSystemCode,
 } = require("../controllers/projectsController")
 const requireAuth = require("../middleware/requireAuth")
 
@@ -21,5 +22,8 @@ router.put("/:projectId", updateProject)
 
 // Add systemLocation
 router.post("/:projectId/systems/locations", addSystemLocationCode)
+
+// Add systemNumber
+router.post("/:projectId/systems/codes", addSystemSystemCode)
 
 module.exports = router

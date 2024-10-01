@@ -64,7 +64,7 @@ const updateProject = async (req, res) => {
 const addSystemLocationCode = async (req, res) => {
 	const { projectId } = req.params
 	const { systemLocation } = req.body
-	console.log(systemLocation)
+	console.log(systemLocation, projectId)
 
 	try {
 		// Find project
@@ -78,12 +78,38 @@ const addSystemLocationCode = async (req, res) => {
 
 		// Save project
 		await project.save()
-
 		// Return project
 		res.status(201).json({ project })
 	} catch (error) {
+		// console.log(error)
 		res.status(400).json({
 			message: error.message || "Vi klarte ikke å opprette systemlokasjonen",
+		})
+	}
+}
+
+const addSystemSystemCode = async (req, res) => {
+	const { projectId } = req.params
+	const { systemCode } = req.body
+	console.log(systemCode, projectId)
+
+	try {
+		// Find project
+		const project = await Project.findById(projectId)
+
+		// Push system location code to project
+		project.systemCodes.push({
+			name: systemCode.sysCode,
+		})
+
+		// Save project
+		await project.save()
+		// Return project
+		res.status(201).json({ project })
+	} catch (error) {
+		// console.log(error)
+		res.status(400).json({
+			message: error.message || "Vi klarte ikke å opprette systemnummeret",
 		})
 	}
 }
@@ -93,4 +119,5 @@ module.exports = {
 	addProject,
 	updateProject,
 	addSystemLocationCode,
+	addSystemSystemCode,
 }
