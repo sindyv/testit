@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose")
 
 const systemCodeSchema = new mongoose.Schema({
 	name: {
@@ -6,11 +6,11 @@ const systemCodeSchema = new mongoose.Schema({
 	},
 	project: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Project',
+		ref: "Project",
 	},
 	createdBy: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User',
+		ref: "User",
 		required: true,
 	},
 	createdAt: {
@@ -30,7 +30,7 @@ const systemCodeSchema = new mongoose.Schema({
 	},
 })
 
-systemCodeSchema.pre('save', function (next) {
+systemCodeSchema.pre("save", function (next) {
 	this.updatedAt = Date.now()
 	next()
 })
@@ -39,16 +39,16 @@ systemCodeSchema.statics.createSystemCode = async function (systemCodeObject) {
 	const { name, projectId, userId } = systemCodeObject
 	console.log(systemCodeObject)
 	if (!name || !projectId || !userId) {
-		throw Error('Vennligst fyll ut nødvendige felter')
+		throw Error("Vennligst fyll ut nødvendige felter")
 	}
 
 	const systemCode = this.create({
 		name,
-		projectId,
-		userId,
+		project: projectId,
+		createdBy: userId,
 	})
 
 	return systemCode
 }
 
-module.exports = mongoose.model('SystemCode', systemCodeSchema)
+module.exports = mongoose.model("SystemCode", systemCodeSchema)

@@ -1,38 +1,31 @@
-import { useState } from 'react'
-import Card from '../../../../UI/Card'
-import Modals from './Components/Modals'
-import { Form, Row, Col, Button } from 'react-bootstrap'
-import InputField from './Components/InputField'
-import { useAddSystemContext } from '../../../../../hooks/useAddSystemContext'
+import { useState } from "react"
+import Card from "../../../../UI/Card"
+import Modals from "./Components/Modals"
+import { Form, Row, Col, Button } from "react-bootstrap"
+import InputField from "./Components/InputField"
+import { useAddSystemContext } from "../../../../../hooks/useAddSystemContext"
 function AddSystem() {
 	const { context } = useAddSystemContext()
 	const [showSysLocModal, setShowSysLocModal] = useState(false)
 	const [showSysNumModal, setShowSysNumModal] = useState(false)
 	const [userList, setUserList] = useState([])
-	const [currentUser, setCurrentUser] = useState('')
 
 	const handleOpenSystemLocationModal = () => setShowSysLocModal(true)
 	const handleOpenSystemNumberModal = () => setShowSysNumModal(true)
 
-	const handleAddUser = () => {
-		// get user object
-		const [user] = context.users.filter((user) => user._id !== currentUser)
-		if (user) {
-			setUserList((prev) => [...prev, user])
-		}
-	}
 	if (context.query.isPending) {
 		return
 	}
+
 	return (
-		<Card title={'Legg til system'} className={'mt-3'}>
+		<Card title={"Legg til system"} className={"mt-3"}>
 			<Form onSubmit={context.handleSubmit(context.onSubmit)}>
 				<Row className='gy-3'>
 					<Col md>
 						<InputField
 							register={context.register}
-							id={'systemLocation'}
-							label={'Systemlokasjon'}
+							id={"systemLocation"}
+							label={"Systemlokasjon"}
 							onClickButton={handleOpenSystemLocationModal}
 							selectData={context.systemLocations}
 						/>
@@ -40,8 +33,8 @@ function AddSystem() {
 					<Col md>
 						<InputField
 							register={context.register}
-							id={'systemCode'}
-							label={'Systemnummer'}
+							id={"systemCode"}
+							label={"Systemnummer"}
 							onClickButton={handleOpenSystemNumberModal}
 							selectData={context.systemCodes}
 						/>
@@ -49,8 +42,8 @@ function AddSystem() {
 					<Col md className='align-self-end'>
 						<InputField
 							register={context.register}
-							id={'systemNumber'}
-							label={'Løpenummer'}
+							id={"systemNumber"}
+							label={"Løpenummer"}
 						/>
 					</Col>
 				</Row>
@@ -58,8 +51,8 @@ function AddSystem() {
 					<Col md className='align-self-end'>
 						<InputField
 							register={context.register}
-							id={'description'}
-							label={'Beskrivelse'}
+							id={"description"}
+							label={"Beskrivelse"}
 						/>
 					</Col>
 					{/* <Col className='align-self-end'>
@@ -103,10 +96,7 @@ function AddSystem() {
 							<>
 								<ul className='list-group'>
 									{userList.map((user) => (
-										<li
-											key={user.id}
-											className='list-group-item'
-										>
+										<li key={user.id} className='list-group-item'>
 											{user.value}
 										</li>
 									))}

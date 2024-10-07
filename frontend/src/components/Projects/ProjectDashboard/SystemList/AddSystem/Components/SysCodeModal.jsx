@@ -1,13 +1,15 @@
-import Button from 'react-bootstrap/Button'
-import BootstrapModal from 'react-bootstrap/Modal'
-import { useForm } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import projectsAPI from '../../../../../../resources/projectsAPI'
+import Button from "react-bootstrap/Button"
+import BootstrapModal from "react-bootstrap/Modal"
+import { useForm } from "react-hook-form"
+import { useParams } from "react-router-dom"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import projectsAPI from "../../../../../../resources/projectsAPI"
+import { useAuthContext } from "../../../../../../hooks/useAuthContext"
 
 function SysCodeModal({ show, onClose, error }) {
 	const { register, handleSubmit, reset } = useForm()
 	const { projectId } = useParams()
+	const { user } = useAuthContext()
 	// Access the client
 	const queryClient = useQueryClient()
 
@@ -15,7 +17,7 @@ function SysCodeModal({ show, onClose, error }) {
 	const mutation = useMutation({
 		mutationFn: async (data) => {
 			try {
-				await projectsAPI.createSystemCode({ data, projectId })
+				await projectsAPI.createSystemCode({ data, projectId, userId: user.id })
 			} catch (error) {
 				console.log(error)
 			}
@@ -24,10 +26,10 @@ function SysCodeModal({ show, onClose, error }) {
 			// Reset form
 			reset()
 			onClose()
-			console.log('Success!')
+			console.log("Success!")
 			// Invalidate and refetch
 			queryClient.invalidateQueries({
-				queryKey: ['projects'],
+				queryKey: ["projects"],
 			})
 		},
 	})
@@ -43,12 +45,12 @@ function SysCodeModal({ show, onClose, error }) {
 			</BootstrapModal.Header>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<BootstrapModal.Body>
-					<div className={'mb-3 flex-fill m-2'}>
-						<label htmlFor={'sysCode'} className='form-label'>
+					<div className={"mb-3 flex-fill m-2"}>
+						<label htmlFor={"name"} className='form-label'>
 							Systemkode
 						</label>
 						<input
-							{...register('sysCode')}
+							{...register("name")}
 							className='form-control'
 							placeholder='Systemnummer fra systemkodetabellen (f.eks 320, 350, 560 etc)'
 						/>

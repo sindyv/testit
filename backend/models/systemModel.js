@@ -1,14 +1,14 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose")
 
 const systemSchema = new mongoose.Schema({
 	systemLocation: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'SystemLocation',
+		ref: "SystemLocation",
 	},
 
 	systemCode: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'SystemCode',
+		ref: "SystemCode",
 	},
 	systemNumber: {
 		type: String,
@@ -18,11 +18,11 @@ const systemSchema = new mongoose.Schema({
 	},
 	project: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Project',
+		ref: "Project",
 	},
 	createdBy: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User',
+		ref: "User",
 		required: true,
 	},
 	createdAt: {
@@ -42,7 +42,7 @@ const systemSchema = new mongoose.Schema({
 	},
 })
 
-systemSchema.pre('save', function (next) {
+systemSchema.pre("save", function (next) {
 	this.updatedAt = Date.now()
 	next()
 })
@@ -51,12 +51,12 @@ systemSchema.statics.createSystem = async function (systemObject) {
 	const {
 		systemLocation,
 		systemCode,
+		systemNumber,
 		projectId,
 		userId,
 		description,
-		systemNumber,
 	} = systemObject
-	console.log(projectObject)
+	console.log(systemObject)
 	if (
 		!systemLocation ||
 		!systemCode ||
@@ -65,19 +65,19 @@ systemSchema.statics.createSystem = async function (systemObject) {
 		!description ||
 		!systemNumber
 	) {
-		throw Error('Vennligst fyll ut nødvendige felter')
+		throw Error("Vennligst fyll ut nødvendige felter")
 	}
 
 	const system = this.create({
 		systemLocation,
 		systemCode,
-		projectId,
-		userId,
-		description,
 		systemNumber,
+		project: projectId,
+		createdBy: userId,
+		description,
 	})
 
 	return system
 }
 
-module.exports = mongoose.model('System', systemSchema)
+module.exports = mongoose.model("System", systemSchema)

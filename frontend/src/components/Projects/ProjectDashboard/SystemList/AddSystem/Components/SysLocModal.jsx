@@ -1,13 +1,16 @@
-import Button from 'react-bootstrap/Button'
-import BootstrapModal from 'react-bootstrap/Modal'
-import { useForm } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import projectsAPI from '../../../../../../resources/projectsAPI'
+import Button from "react-bootstrap/Button"
+import BootstrapModal from "react-bootstrap/Modal"
+import { useForm } from "react-hook-form"
+import { useParams } from "react-router-dom"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import projectsAPI from "../../../../../../resources/projectsAPI"
+import { useAuthContext } from "../../../../../../hooks/useAuthContext"
 
 function SysLocModal({ show, onClose, error }) {
 	const { register, handleSubmit, reset } = useForm()
 	const { projectId } = useParams()
+	const { user } = useAuthContext()
+
 	// Access the client
 	const queryClient = useQueryClient()
 
@@ -15,7 +18,11 @@ function SysLocModal({ show, onClose, error }) {
 	const mutation = useMutation({
 		mutationFn: async (data) => {
 			try {
-				await projectsAPI.createSystemLocation({ data, projectId })
+				await projectsAPI.createSystemLocation({
+					data,
+					projectId,
+					userId: user.id,
+				})
 			} catch (error) {
 				console.log(error)
 			}
@@ -24,10 +31,10 @@ function SysLocModal({ show, onClose, error }) {
 			// Reset form
 			reset()
 			onClose()
-			console.log('Success!')
+			console.log("Success!")
 			// Invalidate and refetch
 			queryClient.invalidateQueries({
-				queryKey: ['projects'],
+				queryKey: ["projects"],
 			})
 		},
 	})
@@ -39,28 +46,26 @@ function SysLocModal({ show, onClose, error }) {
 	return (
 		<BootstrapModal show={show} onHide={onClose} centered>
 			<BootstrapModal.Header closeButton>
-				<BootstrapModal.Title>
-					Legg til lokasjonskode
-				</BootstrapModal.Title>
+				<BootstrapModal.Title>Legg til lokasjonskode</BootstrapModal.Title>
 			</BootstrapModal.Header>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<BootstrapModal.Body>
-					<div className={'mb-3 flex-fill m-2'}>
-						<label htmlFor={'locCode'} className='form-label'>
+					<div className={"mb-3 flex-fill m-2"}>
+						<label htmlFor={"name"} className='form-label'>
 							Lokasjonskode
 						</label>
 						<input
-							{...register('locCode')}
+							{...register("name")}
 							className='form-control'
 							placeholder='Systemts lokasjonsprefix (f.eks +A)'
 						/>
 					</div>
-					<div className={'mb-3 flex-fill m-2'}>
-						<label htmlFor={'description'} className='form-label'>
+					<div className={"mb-3 flex-fill m-2"}>
+						<label htmlFor={"description"} className='form-label'>
 							Beskrivelse
 						</label>
 						<input
-							{...register('description')}
+							{...register("description")}
 							className='form-control'
 							placeholder='Beskrivelse av systemet'
 						/>

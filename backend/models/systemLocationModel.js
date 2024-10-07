@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose")
 
 const SystemLocationSchema = new mongoose.Schema({
 	name: {
@@ -9,11 +9,11 @@ const SystemLocationSchema = new mongoose.Schema({
 	},
 	project: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Project',
+		ref: "Project",
 	},
 	createdBy: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User',
+		ref: "User",
 		required: true,
 	},
 	createdAt: {
@@ -33,7 +33,7 @@ const SystemLocationSchema = new mongoose.Schema({
 	},
 })
 
-SystemLocationSchema.pre('save', function (next) {
+SystemLocationSchema.pre("save", function (next) {
 	this.updatedAt = Date.now()
 	next()
 })
@@ -42,19 +42,19 @@ SystemLocationSchema.statics.createSystemLocation = async function (
 	systemLocationObject
 ) {
 	const { name, projectId, userId, description } = systemLocationObject
-	console.log(systemLocationObject)
+	// console.log(systemLocationObject)
 	if (!name || !projectId || !userId || !description) {
-		throw Error('Vennligst fyll ut nødvendige felter')
+		throw Error("Vennligst fyll ut nødvendige felter")
 	}
 
 	const systemLocation = this.create({
 		name,
-		projectId,
-		userId,
+		project: projectId,
+		createdBy: userId,
 		description,
 	})
 
 	return systemLocation
 }
 
-module.exports = mongoose.model('SystemLocation', SystemLocationSchema)
+module.exports = mongoose.model("SystemLocation", SystemLocationSchema)
