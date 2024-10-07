@@ -1,9 +1,27 @@
 import { Link, useNavigate } from 'react-router-dom'
 import Card from '../../../UI/Card'
 import ThreeDotsDropdown from '../../../UI/ThreeDotsDropdown'
-
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useParams } from 'react-router-dom'
+import projectsAPI from '../../../../resources/projectsAPI'
 function ProjectSystemList() {
 	const navigate = useNavigate()
+	const { projectId } = useParams()
+
+	// Queries
+	const { isPending, isError, data, error } = useQuery({
+		queryKey: [
+			'projects',
+			{
+				query: {
+					_id: projectId,
+				},
+			},
+		],
+		queryFn: projectsAPI.fetchProjects,
+	})
+
+	console.log(data)
 	return (
 		<Card
 			title={'Systemoversikt'}

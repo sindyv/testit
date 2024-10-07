@@ -1,18 +1,24 @@
-const Project = require("../models/projectModel")
-const User = require("../models/userModel")
+const Project = require('../models/projectModel')
+const System = require('../models/systemModel')
+const SystemCode = require('../models/systemCodeModel')
+const SystemLocation = require('../models/systemLocationModel')
+const User = require('../models/userModel')
 
 const getProjects = async (req, res) => {
 	const query = req?.query ?? {}
 	console.log(query)
 	try {
-		const projects = await Project.find(query).populate("users").exec()
+		const projects = await Project.find(query)
+			.populate('users')
+			.populate('systems')
+			.exec()
 		if (!projects) {
-			throw Error("Kunne ikke finne noen brukere i dette firmaet")
+			throw Error('Kunne ikke finne noen brukere i dette firmaet')
 		}
 		res.status(200).json({ projects })
 	} catch (error) {
 		console.log(error)
-		res.status(400).json({ error: error.message || "Noe gikk galt" })
+		res.status(400).json({ error: error.message || 'Noe gikk galt' })
 	}
 	// let projects = await Project.find().populate('users').exec()
 	// res.status(200).json({ projects })
@@ -36,7 +42,7 @@ const addProject = async (req, res) => {
 		res.status(201).json({ newProject })
 	} catch (error) {
 		res.status(400).json({
-			message: error.message || "Vi klarte ikke å opprette prosjektet",
+			message: error.message || 'Vi klarte ikke å opprette prosjektet',
 		})
 	}
 }
@@ -52,19 +58,18 @@ const updateProject = async (req, res) => {
 
 		const newProject = await Project.findById(projectId)
 		if (!newProject) {
-			throw Error("Kunne ikke oppdatere prosjektet")
+			throw Error('Kunne ikke oppdatere prosjektet')
 		}
 		res.status(200).json({ newProject })
 	} catch (error) {
 		console.log(error)
-		res.status(400).json({ error: error.message || "Noe gikk galt" })
+		res.status(400).json({ error: error.message || 'Noe gikk galt' })
 	}
 }
 
 const addSystemLocationCode = async (req, res) => {
 	const { projectId } = req.params
 	const { systemLocation } = req.body
-	console.log(systemLocation, projectId)
 
 	try {
 		// Find project
@@ -83,7 +88,8 @@ const addSystemLocationCode = async (req, res) => {
 	} catch (error) {
 		// console.log(error)
 		res.status(400).json({
-			message: error.message || "Vi klarte ikke å opprette systemlokasjonen",
+			message:
+				error.message || 'Vi klarte ikke å opprette systemlokasjonen',
 		})
 	}
 }
@@ -91,7 +97,6 @@ const addSystemLocationCode = async (req, res) => {
 const addSystemSystemCode = async (req, res) => {
 	const { projectId } = req.params
 	const { systemCode } = req.body
-	console.log(systemCode, projectId)
 
 	try {
 		// Find project
@@ -109,7 +114,32 @@ const addSystemSystemCode = async (req, res) => {
 	} catch (error) {
 		// console.log(error)
 		res.status(400).json({
-			message: error.message || "Vi klarte ikke å opprette systemnummeret",
+			message:
+				error.message || 'Vi klarte ikke å opprette systemnummeret',
+		})
+	}
+}
+
+const addSystem = async (req, res) => {
+	const { projectId } = req.params
+	const system = req.body
+
+	try {
+		// Find project
+		const project = await Project.findById(projectId)
+
+		// Push system location code to project
+		project.systems.push(system)
+
+		// Save project
+		await project.save()
+		// Return project
+		res.status(201).json({ project })
+	} catch (error) {
+		// console.log(error)
+		console.log(error)
+		res.status(400).json({
+			message: error.message || 'Vi klarte ikke å opprette systemet',
 		})
 	}
 }
@@ -120,4 +150,5 @@ module.exports = {
 	updateProject,
 	addSystemLocationCode,
 	addSystemSystemCode,
+	addSystem,
 }

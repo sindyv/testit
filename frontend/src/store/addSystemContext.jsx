@@ -1,21 +1,13 @@
-import { createContext, useReducer, useState } from "react"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { useParams } from "react-router-dom"
-import projectsAPI from "../resources/projectsAPI"
-import { useForm } from "react-hook-form"
-import useUpdateDataMutation from "../hooks/useUpdateDataMutation"
+import { createContext, useReducer, useState } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useParams } from 'react-router-dom'
+import projectsAPI from '../resources/projectsAPI'
+import { useForm } from 'react-hook-form'
 export const AddSystemContext = createContext()
-
-const addSystemReducer = (state, action) => {
-	switch (action.type) {
-		case "asd":
-			return
-	}
-}
 
 function AddSystemContextProvider({ children }) {
 	// Hooks
-	const [state, dispatchState] = useReducer(addSystemReducer)
+
 	const { projectId } = useParams()
 	// Find query client
 	const queryClient = useQueryClient()
@@ -23,7 +15,7 @@ function AddSystemContextProvider({ children }) {
 	// Queries
 	const { isPending, isError, data, error } = useQuery({
 		queryKey: [
-			"projects",
+			'projects',
 			{
 				query: {
 					_id: projectId,
@@ -36,64 +28,86 @@ function AddSystemContextProvider({ children }) {
 	// Mutations
 	const invalidateQuery = () => {
 		queryClient.invalidateQueries({
-			queryKey: [
-				"projects",
-				{
-					query: {
-						_id: projectId,
-					},
-				},
-			],
+			queryKey: ['projects'],
 		})
 	}
-	const mutateNewLocationCode = async (data) => {
-		projectsAPI.createSystemLocation({ data, projectId })
+
+	const mutation = useMutation({
+		mutationFn: async (data) => {
+			try {
+				await projectsAPI.createSystem({ data, projectId })
+			} catch (error) {
+				console.log(error)
+			}
+		},
+		onSuccess: () => {
+			// Reset form
+			reset()
+			console.log('Success!')
+			// Invalidate and refetch
+			queryClient.invalidateQueries({
+				queryKey: ['projects'],
+			})
+		},
+	})
+
+	// Make a 'Projects'-object
+	let project = {}
+	if (!isPending && !isError) {
+		project = { ...data.projects[0] }
 	}
 
-	const mutateNewSystemCode = async (data) => {
-		projectsAPI.createSystemCode({ data, projectId })
-	}
-
-	const locationCodeMutation = useUpdateDataMutation(
-		mutateNewLocationCode,
-		invalidateQuery
-	)
-
-	const systemCodeMutation = useUpdateDataMutation(
-		mutateNewSystemCode,
-		invalidateQuery
-	)
-
-	// Make a 'users'-array
+	// Make a various -arrays for use in addSystems component
 	const users = []
+	const systemCodes = []
+	const systemLocations = []
 
 	if (!isPending && !isError) {
-		data.projects[0].users.map((user) =>
+		project.users.map((user) =>
 			users.push({
 				value: `${user.firstName} ${user.lastName}`,
 				id: user._id,
 			})
 		)
+
+		project.systemCodes.map((systemCode) => {
+			systemCodes.push({
+				value: systemCode.name,
+				id: systemCode._id,
+			})
+		})
+
+		project.systemLocations.map((systemLocation) => {
+			systemLocations.push({
+				value: systemLocation.name,
+				id: systemLocation._id,
+				description: systemLocation.description,
+			})
+		})
 	}
 
 	// Form input handeling
 	const { register, handleSubmit } = useForm({})
 
+	const onSubmit = (data) => {
+		mutation.mutate(data)
+		console.log(data)
+	}
+
 	// Make a contxt object
 	const context = {
-		state,
-		dispatchState,
-		project: data,
+		project,
 		users,
 		register,
 		handleSubmit,
+		onSubmit,
 		query: {
 			isPending,
 			isError,
 			error,
 		},
-		locationCodeMutation,
-		systemCodeMutation,
+		systemCodes,
+		systemLocations,
 	}
 
 	return (

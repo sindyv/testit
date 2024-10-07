@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 
 const projectSchema = new mongoose.Schema(
 	{
@@ -21,12 +21,12 @@ const projectSchema = new mongoose.Schema(
 		company: {
 			type: mongoose.Schema.Types.ObjectId,
 			required: true,
-			ref: "Company",
+			ref: 'Company',
 		},
 		users: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "User",
+				ref: 'User',
 			},
 		],
 		webhotel: {
@@ -35,7 +35,7 @@ const projectSchema = new mongoose.Schema(
 		owner: {
 			type: String,
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "User",
+			ref: 'User',
 			required: true,
 		},
 		endDate: {
@@ -63,9 +63,17 @@ const projectSchema = new mongoose.Schema(
 		systemCodes: {
 			type: [{ name: String }],
 		},
+		systems: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'System',
+				required: true,
+			},
+		],
+
 		createdBy: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "User",
+			ref: 'User',
 			required: true,
 		},
 		createdAt: {
@@ -84,7 +92,7 @@ const projectSchema = new mongoose.Schema(
 		toObject: true,
 	}
 )
-projectSchema.pre("save", function (next) {
+projectSchema.pre('save', function (next) {
 	this.updatedAt = Date.now()
 	next()
 })
@@ -105,7 +113,7 @@ projectSchema.statics.createProject = async function (projectObject) {
 	} = projectObject
 	console.log(projectObject)
 	if (!projectName || !projectDescription || !endDate) {
-		throw Error("Vennligst fyll ut nødvendige felter")
+		throw Error('Vennligst fyll ut nødvendige felter')
 	}
 
 	const project = this.create({
@@ -124,4 +132,5 @@ projectSchema.statics.createProject = async function (projectObject) {
 
 	return project
 }
-module.exports = mongoose.model("Project", projectSchema)
+
+module.exports = mongoose.model('Project', projectSchema)

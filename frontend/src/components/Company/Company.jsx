@@ -22,7 +22,7 @@ function Company() {
 
 	// Mutations
 	const mutation = useMutation({
-		mutationFn: async (company) => API.updateCompany(company),
+		mutationFn: async (company) => await API.updateCompany(company),
 		onSuccess: () => {
 			// Invalidate and refetch
 			queryClient.invalidateQueries({ queryKey: ['company'] })
