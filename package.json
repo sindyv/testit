@@ -9,5 +9,7 @@
 	"author": "",
 	"license": "ISC",
 	"description": "",
-	"dependencies": {}
+	"dependencies": {
+		"file-saver": "^2.0.5"
+	}
 }

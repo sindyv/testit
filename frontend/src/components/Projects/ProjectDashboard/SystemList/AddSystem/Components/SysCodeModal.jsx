@@ -1,10 +1,12 @@
-import Button from "react-bootstrap/Button"
-import BootstrapModal from "react-bootstrap/Modal"
-import { useForm } from "react-hook-form"
-import { useParams } from "react-router-dom"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import projectsAPI from "../../../../../../resources/projectsAPI"
-import { useAuthContext } from "../../../../../../hooks/useAuthContext"
+import Button from 'react-bootstrap/Button'
+import BootstrapModal from 'react-bootstrap/Modal'
+import { toast } from 'react-toastify'
+import { useForm } from 'react-hook-form'
+import { useParams } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import projectsAPI from '../../../../../../resources/projectsAPI'
+import { useAuthContext } from '../../../../../../hooks/useAuthContext'
+import Toast from '../../../../../UI/Toast'
 
 function SysCodeModal({ show, onClose, error }) {
 	const { register, handleSubmit, reset } = useForm()
@@ -16,21 +18,26 @@ function SysCodeModal({ show, onClose, error }) {
 	// Mutations
 	const mutation = useMutation({
 		mutationFn: async (data) => {
-			try {
-				await projectsAPI.createSystemCode({ data, projectId, userId: user.id })
-			} catch (error) {
-				console.log(error)
-			}
+			await projectsAPI.createSystemCode({
+				data,
+				projectId,
+				userId: user.id,
+			})
 		},
 		onSuccess: () => {
 			// Reset form
+			toast.success('Data lagret', {})
+
 			reset()
 			onClose()
-			console.log("Success!")
+			console.log('Success!')
 			// Invalidate and refetch
 			queryClient.invalidateQueries({
-				queryKey: ["projects"],
+				queryKey: ['projects'],
 			})
+		},
+		onError: () => {
+			toast.error(mutation.error.message, {})
 		},
 	})
 
@@ -45,12 +52,12 @@ function SysCodeModal({ show, onClose, error }) {
 			</BootstrapModal.Header>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<BootstrapModal.Body>
-					<div className={"mb-3 flex-fill m-2"}>
-						<label htmlFor={"name"} className='form-label'>
+					<div className={'mb-3 flex-fill m-2'}>
+						<label htmlFor={'name'} className='form-label'>
 							Systemkode
 						</label>
 						<input
-							{...register("name")}
+							{...register('name')}
 							className='form-control'
 							placeholder='Systemnummer fra systemkodetabellen (f.eks 320, 350, 560 etc)'
 						/>

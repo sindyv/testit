@@ -1,23 +1,25 @@
-import { createContext, useReducer, useState } from "react"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { useParams } from "react-router-dom"
-import projectsAPI from "../resources/projectsAPI"
-import { useForm } from "react-hook-form"
-import { useAuthContext } from "../hooks/useAuthContext"
-import Toast from "../components/UI/Toast"
+import { createContext, useReducer, useState } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useParams } from 'react-router-dom'
+import projectsAPI from '../resources/projectsAPI'
+import { useForm } from 'react-hook-form'
+import { useAuthContext } from '../hooks/useAuthContext'
+import { toast } from 'react-toastify'
+import Toast from '../components/UI/Toast'
 export const AddSystemContext = createContext()
 
 function AddSystemContextProvider({ children }) {
 	// Hooks
 	const { projectId } = useParams()
 	const { user } = useAuthContext()
+	const { register, handleSubmit, reset } = useForm({})
 	// Find query client
 	const queryClient = useQueryClient()
 
 	// Queries
 	const { isPending, isError, data, error } = useQuery({
 		queryKey: [
-			"projects",
+			'projects',
 			{
 				projectId,
 			},
@@ -27,20 +29,23 @@ function AddSystemContextProvider({ children }) {
 
 	const mutation = useMutation({
 		mutationFn: async (data) => {
-			try {
-				await projectsAPI.createSystem({ data, projectId, userId: user.id })
-			} catch (error) {
-				console.log(error)
-			}
+			await projectsAPI.createSystem({
+				data,
+				projectId,
+				userId: user.id,
+			})
 		},
 		onSuccess: () => {
 			// Reset form
+			toast.success('System lagt til')
 			reset()
-			console.log("Success!")
 			// Invalidate and refetch
 			queryClient.invalidateQueries({
-				queryKey: ["projects"],
+				queryKey: ['projects'],
 			})
+		},
+		onError: () => {
+			toast.error(mutation.error.message)
 		},
 	})
 
@@ -76,7 +81,6 @@ function AddSystemContextProvider({ children }) {
 	systemCodes.sort((a, b) => a.value - b.value)
 
 	// Form input handeling
-	const { register, handleSubmit } = useForm({})
 
 	const onSubmit = (data) => {
 		mutation.mutate(data)
@@ -93,6 +97,7 @@ function AddSystemContextProvider({ children }) {
 			isError,
 			error,
 		},
+		mutation,
 		systemCodes,
 		systemLocations,
 	}

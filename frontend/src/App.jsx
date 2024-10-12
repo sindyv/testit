@@ -2,6 +2,8 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { RouterProvider } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
 import ProtectedRoute from './routes/ProtectedRoute.jsx'
 import Root from './routes/Root.jsx'
 import ErrorPage from './routes/ErrorPage.jsx'
@@ -29,6 +31,7 @@ import System from './components/Projects/ProjectDashboard/System/System.jsx'
 import Signup from './components/Unprotected/Signup/Signup.jsx'
 import AddSystem from './components/Projects/ProjectDashboard/SystemList/AddSystem/AddSystem.jsx'
 import AddSystemContextProvider from './store/addSystemContext.jsx'
+import ProjectContextProvider from './store/projectContext.jsx'
 
 function App() {
 	const { user } = useAuthContext()
@@ -87,7 +90,9 @@ function App() {
 							path: ':projectId',
 							element: (
 								<ProtectedRoute>
-									<SelectedProjectRoute />
+									<ProjectContextProvider>
+										<SelectedProjectRoute />
+									</ProjectContextProvider>
 								</ProtectedRoute>
 							),
 							errorElement: <p>An error has occured!</p>,
@@ -289,7 +294,8 @@ function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<RouterProvider router={router} />
-			<ReactQueryDevtools />
+			{/* <ReactQueryDevtools /> */}
+			<ToastContainer />
 		</QueryClientProvider>
 	)
 }
