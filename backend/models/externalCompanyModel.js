@@ -1,5 +1,5 @@
-const validator = require('validator')
-const mongoose = require('mongoose')
+const validator = require("validator")
+const mongoose = require("mongoose")
 
 const externalCompanyuSchema = new mongoose.Schema(
 	{
@@ -29,7 +29,7 @@ const externalCompanyuSchema = new mongoose.Schema(
 		users: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: 'User',
+				ref: "User",
 			},
 		],
 		website: {
@@ -37,12 +37,12 @@ const externalCompanyuSchema = new mongoose.Schema(
 		},
 		createdBy: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'User',
+			ref: "User",
 			required: true,
 		},
 		attachedCompany: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Company',
+			ref: "Company",
 			required: true,
 		},
 		createdAt: {
@@ -61,7 +61,7 @@ const externalCompanyuSchema = new mongoose.Schema(
 		toObject: true,
 	}
 )
-externalCompanyuSchema.pre('save', function (next) {
+externalCompanyuSchema.pre("save", function (next) {
 	this.updatedAt = Date.now()
 	next()
 })
@@ -78,11 +78,11 @@ externalCompanyuSchema.statics.addExternalCompany = async function (
 	user
 ) {
 	if (!companyName || !orgNu || !email) {
-		throw Error('Please fill all inn all fields')
+		throw Error("Please fill all inn all fields")
 	}
 
 	if (!validator.isEmail(email)) {
-		throw Error('Please use a valid email')
+		throw Error("Please use a valid email")
 	}
 
 	const externalCompany = this.create({
@@ -100,4 +100,4 @@ externalCompanyuSchema.statics.addExternalCompany = async function (
 
 	return externalCompany
 }
-module.exports = mongoose.model('ExternalCompany', externalCompanyuSchema)
+module.exports = mongoose.model("ExternalCompany", externalCompanyuSchema)

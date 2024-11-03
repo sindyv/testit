@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from 'react'
-import { useDropzone } from 'react-dropzone'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
-import filesAPI from '../../../../resources/filesAPI'
-import { useAuthContext } from '../../../../hooks/useAuthContext'
-import { useParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import React, { useState, useCallback } from "react"
+import { useDropzone } from "react-dropzone"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useForm } from "react-hook-form"
+import filesAPI from "../../../../resources/filesAPI"
+import { useAuthContext } from "../../../../hooks/useAuthContext"
+import { useParams } from "react-router-dom"
+import { toast } from "react-toastify"
 
 const NewProjectDescription = ({ project }) => {
 	const [files, setFiles] = useState([])
@@ -31,12 +31,12 @@ const NewProjectDescription = ({ project }) => {
 		},
 		onSettled: (data) => {
 			// Reset form
-			toast.success('Fil lastet opp ...')
+			toast.success("Fil lastet opp ...")
 			setFiles([])
 			reset()
 			// Invalidate and refetch
 			queryClient.invalidateQueries({
-				queryKey: ['files'],
+				queryKey: ["files"],
 			})
 		},
 		onError: (error) => {
@@ -47,13 +47,13 @@ const NewProjectDescription = ({ project }) => {
 
 	const onSubmit = (data) => {
 		const formData = new FormData()
-		formData.append('systemId', data.system)
-		formData.append('companyId', user.company)
-		formData.append('userId', user.id)
-		formData.append('description', data.description)
-		formData.append('files', files[0])
-		formData.append('projectId', projectId)
-		formData.append('fileRelation', 'functionDescription')
+		formData.append("systemId", data.system)
+		formData.append("companyId", user.company)
+		formData.append("userId", user.id)
+		formData.append("description", data.description)
+		formData.append("files", files[0])
+		formData.append("projectId", projectId)
+		formData.append("fileRelation", "functionDescription")
 
 		mutation.mutate(formData)
 		// Handle form submission here
@@ -64,10 +64,10 @@ const NewProjectDescription = ({ project }) => {
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				className='mx-auto'
-				style={{ maxWidth: '500px' }}
+				style={{ maxWidth: "500px" }}
 			>
 				<div className='mb-3'>
-					<select className='form-select m-0' {...register('system')}>
+					<select className='form-select m-0' {...register("system")}>
 						{project.systems.map((system) => {
 							return (
 								<option
@@ -90,11 +90,9 @@ const NewProjectDescription = ({ project }) => {
 				<div
 					{...getRootProps()}
 					className={`mb-3 p-4 border rounded text-center ${
-						isDragActive
-							? 'border-primary bg-light'
-							: 'border-secondary'
+						isDragActive ? "border-primary bg-light" : "border-secondary"
 					}`}
-					style={{ cursor: 'pointer' }}
+					style={{ cursor: "pointer" }}
 				>
 					<input {...getInputProps()} />
 					{isDragActive ? (

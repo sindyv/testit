@@ -1,43 +1,46 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
-import { RouterProvider } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer } from 'react-toastify'
-import ProtectedRoute from './routes/ProtectedRoute.jsx'
-import Root from './routes/Root.jsx'
-import ErrorPage from './routes/ErrorPage.jsx'
-import LoginRoute from './routes/LoginRoute.jsx'
-import SignupRoute from './routes/SignupRoute.jsx'
-import { useAuthContext } from './hooks/useAuthContext.js'
-import DashboardRoute from './routes/DashboardRoute.jsx'
-import ProjectNewRoute from './routes/Project/ProjectNewRoute.jsx'
-import UsersRoute from './routes/UsersRoute.jsx'
-import CompanyRoute from './routes/Company/CompanyRoute.jsx'
+import { createBrowserRouter, Navigate } from "react-router-dom"
+import { RouterProvider } from "react-router-dom"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import "react-toastify/dist/ReactToastify.css"
+import { ToastContainer } from "react-toastify"
+import ProtectedRoute from "./routes/ProtectedRoute.jsx"
+import Root from "./routes/Root.jsx"
+import ErrorPage from "./routes/ErrorPage.jsx"
+import LoginRoute from "./routes/LoginRoute.jsx"
+import SignupRoute from "./routes/SignupRoute.jsx"
+import { useAuthContext } from "./hooks/useAuthContext.js"
+import DashboardRoute from "./routes/DashboardRoute.jsx"
+import ProjectNewRoute from "./routes/Project/ProjectNewRoute.jsx"
+import UsersRoute from "./routes/UsersRoute.jsx"
+import CompanyRoute from "./routes/Company/CompanyRoute.jsx"
 
-import Company from './components/Company/Company.jsx'
-import UsersAddRoute from './routes/UsersAddRoute.jsx'
-import SignupNewCompany from './components/Unprotected/Signup/SignupNewCompany.jsx'
-import UserIsRegistered from './components/Unprotected/Signup/UserIsRegistered.jsx'
-import ProjectListRoute from './routes/Project/ProjectListRoute.jsx'
-import SelectedProjectRoute from './routes/Project/SelectedProjectRoute.jsx'
-import ProjectSystemList from './components/Projects/ProjectDashboard/SystemList/SystemList.jsx'
-import ProjectFunctionDescription from './components/Projects/ProjectDashboard/FunctionDescription/FunctionDescription.jsx'
-import ProjectIntegratedTestList from './components/Projects/ProjectDashboard/IntegratedTestList/IntegratedTestList.jsx'
-import ProjectSystemTestList from './components/Projects/ProjectDashboard/SystemTestList/SystemTestList.jsx'
-import ProjectUserList from './components/Projects/ProjectDashboard/UserList/ProjectUserList.jsx'
-import ProjectDashboard from './components/Projects/ProjectDashboard/ProjectDashboard.jsx'
-import System from './components/Projects/ProjectDashboard/System/System.jsx'
-import Signup from './components/Unprotected/Signup/Signup.jsx'
-import AddSystem from './components/Projects/ProjectDashboard/SystemList/AddSystem/AddSystem.jsx'
-import AddSystemContextProvider from './store/addSystemContext.jsx'
-import ProjectContextProvider from './store/projectContext.jsx'
+import Company from "./components/Company/Company.jsx"
+import UsersAddRoute from "./routes/UsersAddRoute.jsx"
+import SignupNewCompany from "./components/Unprotected/Signup/SignupNewCompany.jsx"
+import UserIsRegistered from "./components/Unprotected/Signup/UserIsRegistered.jsx"
+import ProjectListRoute from "./routes/Project/ProjectListRoute.jsx"
+import SelectedProjectRoute from "./routes/Project/SelectedProjectRoute.jsx"
+import ProjectSystemList from "./components/Projects/ProjectDashboard/SystemList/SystemList.jsx"
+import ProjectFunctionDescription from "./components/Projects/ProjectDashboard/FunctionDescription/FunctionDescription.jsx"
+import ProjectIntegratedTestList from "./components/Projects/ProjectDashboard/IntegratedTestList/IntegratedTestList.jsx"
+import ProjectSystemTestList from "./components/Projects/ProjectDashboard/SystemTestList/SystemTestList.jsx"
+import ProjectUserList from "./components/Projects/ProjectDashboard/UserList/ProjectUserList.jsx"
+import ProjectDashboard from "./components/Projects/ProjectDashboard/ProjectDashboard.jsx"
+import System from "./components/Projects/ProjectDashboard/System/System.jsx"
+import Signup from "./components/Unprotected/Signup/Signup.jsx"
+import AddSystem from "./components/Projects/ProjectDashboard/SystemList/AddSystem/AddSystem.jsx"
+import AddSystemContextProvider from "./store/addSystemContext.jsx"
+import ProjectContextProvider from "./store/projectContext.jsx"
+import Add from "./components/Projects/ProjectDashboard/System/Add/Add.jsx"
+import Checklist from "./components/Projects/ProjectDashboard/System/Add/Checklist/Checklist.jsx"
+import AddChecklistContextProvider from "./store/addChecklistContext.jsx"
 
 function App() {
 	const { user } = useAuthContext()
 	const router = createBrowserRouter([
 		{
-			path: '/signup',
+			path: "/signup",
 			element: <SignupRoute />,
 			errorElement: <ErrorPage />,
 			children: [
@@ -46,18 +49,18 @@ function App() {
 					element: <Signup />,
 				},
 				{
-					path: 'company/new',
+					path: "company/new",
 					element: <SignupNewCompany />,
 				},
 				{
-					path: 'success',
+					path: "success",
 					element: <UserIsRegistered />,
 				},
 			],
 		},
 		{
-			path: '/',
-			element: user ? <Root /> : <Navigate to={'/login'} />,
+			path: "/",
+			element: user ? <Root /> : <Navigate to={"/login"} />,
 			errorElement: <ErrorPage />,
 			children: [
 				{
@@ -70,10 +73,10 @@ function App() {
 					errorElement: <p>An error has occured!</p>,
 				},
 				{
-					path: 'projects',
+					path: "projects",
 					handle: {
 						crumb: () => {
-							return 'Prosjekter'
+							return "Prosjekter"
 						},
 					},
 					children: [
@@ -87,7 +90,7 @@ function App() {
 							errorElement: <p>An error has occured!</p>,
 						},
 						{
-							path: ':projectId',
+							path: ":projectId",
 							element: (
 								<ProtectedRoute>
 									<ProjectContextProvider>
@@ -98,7 +101,7 @@ function App() {
 							errorElement: <p>An error has occured!</p>,
 							handle: {
 								crumb: () => {
-									return 'Dashboard'
+									return "Dashboard"
 								},
 							},
 							children: [
@@ -112,12 +115,12 @@ function App() {
 									errorElement: <p>An error has occured!</p>,
 									handle: {
 										crumb: () => {
-											return 'Brukere i prosjekt'
+											return "Brukere i prosjekt"
 										},
 									},
 								},
 								{
-									path: 'users',
+									path: "users",
 									element: (
 										<ProtectedRoute>
 											<ProjectUserList />
@@ -126,12 +129,12 @@ function App() {
 									errorElement: <p>An error has occured!</p>,
 									handle: {
 										crumb: () => {
-											return 'Brukere i prosjekt'
+											return "Brukere i prosjekt"
 										},
 									},
 								},
 								{
-									path: 'system-tests',
+									path: "system-tests",
 									element: (
 										<ProtectedRoute>
 											<ProjectSystemTestList />
@@ -139,11 +142,11 @@ function App() {
 									),
 									errorElement: <p>An error has occured!</p>,
 									handle: {
-										crumb: () => 'Systemtester',
+										crumb: () => "Systemtester",
 									},
 								},
 								{
-									path: 'integrated-tests',
+									path: "integrated-tests",
 									element: (
 										<ProtectedRoute>
 											<ProjectIntegratedTestList />
@@ -151,11 +154,11 @@ function App() {
 									),
 									errorElement: <p>An error has occured!</p>,
 									handle: {
-										crumb: () => 'Integrerte tester',
+										crumb: () => "Integrerte tester",
 									},
 								},
 								{
-									path: 'function-descriptions',
+									path: "function-descriptions",
 									element: (
 										<ProtectedRoute>
 											<ProjectFunctionDescription />
@@ -163,14 +166,14 @@ function App() {
 									),
 									errorElement: <p>An error has occured!</p>,
 									handle: {
-										crumb: () => 'Funksjonsbeskrivelser',
+										crumb: () => "Funksjonsbeskrivelser",
 									},
 								},
 								{
-									path: 'systems',
+									path: "systems",
 									errorElement: <ErrorPage />,
 									handle: {
-										crumb: () => 'Systemliste',
+										crumb: () => "Systemliste",
 									},
 									children: [
 										{
@@ -183,7 +186,7 @@ function App() {
 											errorElement: <ErrorPage />,
 										},
 										{
-											path: 'add',
+											path: "add",
 											element: (
 												<ProtectedRoute>
 													<AddSystemContextProvider>
@@ -194,12 +197,49 @@ function App() {
 											errorElement: <ErrorPage />,
 										},
 										{
-											path: ':systemId',
-											element: (
-												<ProtectedRoute>
-													<System />
-												</ProtectedRoute>
-											),
+											path: ":systemId",
+											errorElement: <ErrorPage />,
+											children: [
+												{
+													index: true,
+													element: (
+														<ProtectedRoute>
+															<System />
+														</ProtectedRoute>
+													),
+												},
+												{
+													path: "add",
+													children: [
+														{
+															index: true,
+															element: (
+																<ProtectedRoute>
+																	<Add />
+																</ProtectedRoute>
+															),
+														},
+														{
+															path: "checklist",
+															element: (
+																<ProtectedRoute>
+																	<AddChecklistContextProvider>
+																		<Checklist />
+																	</AddChecklistContextProvider>
+																</ProtectedRoute>
+															),
+														},
+														{
+															path: "single-system-test",
+															element: <></>,
+														},
+														{
+															path: "multi-system-test",
+															element: <></>,
+														},
+													],
+												},
+											],
 											errorElement: <ErrorPage />,
 										},
 									],
@@ -207,7 +247,7 @@ function App() {
 							],
 						},
 						{
-							path: 'new',
+							path: "new",
 							element: (
 								<ProtectedRoute>
 									<ProjectNewRoute />
@@ -216,7 +256,7 @@ function App() {
 							errorElement: <ErrorPage />,
 							handle: {
 								crumb: () => {
-									return 'Opprett bruker'
+									return "Opprett bruker"
 								},
 							},
 						},
@@ -224,11 +264,11 @@ function App() {
 				},
 
 				{
-					path: 'users',
+					path: "users",
 
 					handle: {
 						crumb: () => {
-							return 'Brukere'
+							return "Brukere"
 						},
 					},
 					children: [
@@ -242,7 +282,7 @@ function App() {
 							errorElement: <p>An error has occured!</p>,
 						},
 						{
-							path: 'add',
+							path: "add",
 							element: (
 								<ProtectedRoute>
 									<UsersAddRoute />
@@ -251,14 +291,14 @@ function App() {
 							errorElement: <p>An error has occured!</p>,
 							handle: {
 								crumb: () => {
-									return 'Legg til bruker'
+									return "Legg til bruker"
 								},
 							},
 						},
 					],
 				},
 				{
-					path: 'company',
+					path: "company",
 					element: (
 						<ProtectedRoute>
 							<CompanyRoute />
@@ -267,7 +307,7 @@ function App() {
 					errorElement: <p>An error has occured!</p>,
 					handle: {
 						crumb: () => {
-							return 'Din bedrift'
+							return "Din bedrift"
 						},
 					},
 					children: [
@@ -285,7 +325,7 @@ function App() {
 			],
 		},
 		{
-			path: '/login',
+			path: "/login",
 			element: <LoginRoute />,
 		},
 	])

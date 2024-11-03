@@ -1,17 +1,17 @@
-const User = require('../models/userModel')
-const Company = require('../models/companyModel')
-const jwt = require('jsonwebtoken')
+const User = require("../models/userModel")
+const Company = require("../models/companyModel")
+const jwt = require("jsonwebtoken")
 
 function createToken(user) {
 	return jwt.sign(
 		{
 			_id: user._id,
 			enabled: user.enabled,
-			role: user?.role ?? 'not found',
+			role: user?.role ?? "not found",
 		},
 		process.env.JWT_SECRET,
 		{
-			expiresIn: '3d',
+			expiresIn: "3d",
 		}
 	)
 }
@@ -72,7 +72,7 @@ const signupUser = async (req, res) => {
 		res.status(200).json({
 			user: {
 				id: user._id,
-				name: user.firstName + ' ' + user.lastName,
+				name: user.firstName + " " + user.lastName,
 				email,
 				company: user?.company ?? null,
 				token,
@@ -85,7 +85,6 @@ const signupUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
 	const { email, password } = req.body
-
 	try {
 		const user = await User.login(email, password)
 
@@ -94,7 +93,7 @@ const loginUser = async (req, res) => {
 		res.status(200).json({
 			user: {
 				id: user._id,
-				name: user.firstName + ' ' + user.lastName,
+				name: user.firstName + " " + user.lastName,
 				email,
 				company: user?.company ?? null,
 				token,
@@ -102,7 +101,8 @@ const loginUser = async (req, res) => {
 			enabled: user.enabled,
 		})
 	} catch (error) {
-		res.status(400).json({ error: error.message })
+		res.status(400).json({ message: error.message })
+		console.log(error.message)
 	}
 }
 
@@ -111,29 +111,26 @@ const fetchUsersFromCompany = async (req, res) => {
 	try {
 		const users = await User.find(query)
 		if (!users) {
-			throw Error('Kunne ikke finne noen brukere i dette firmaet')
+			throw Error("Kunne ikke finne noen brukere i dette firmaet")
 		}
 		res.status(200).json({ users })
 	} catch (error) {
-		res.status(400).json({ error: error.message || 'Noe gikk galt' })
+		res.status(400).json({ error: error.message || "Noe gikk galt" })
 	}
 }
 
 const updateUser = async (req, res) => {
 	const { user } = req.body
 	try {
-		const beforeUpdate = await User.findOneAndUpdate(
-			{ _id: user._id },
-			user
-		)
+		const beforeUpdate = await User.findOneAndUpdate({ _id: user._id }, user)
 
 		const newUser = await User.findById(user._id)
 		if (!newUser) {
-			throw Error('Kunne ikke oppdatere brukeren')
+			throw Error("Kunne ikke oppdatere brukeren")
 		}
 		res.status(200).json({ newUser })
 	} catch (error) {
-		res.status(400).json({ error: error.message || 'Noe gikk galt' })
+		res.status(400).json({ error: error.message || "Noe gikk galt" })
 	}
 }
 module.exports = {

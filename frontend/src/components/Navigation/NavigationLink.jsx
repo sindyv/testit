@@ -1,6 +1,6 @@
-import useLogout from '../../hooks/useLogout'
-import styles from './Navigation.module.css'
-import { NavLink } from 'react-router-dom'
+import useLogout from "../../hooks/useLogout"
+import styles from "./Navigation.module.css"
+import { NavLink } from "react-router-dom"
 
 function NavigationLink({ url, svg = null, linkTitle }) {
 	return (
